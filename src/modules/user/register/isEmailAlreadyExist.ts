@@ -7,7 +7,7 @@ import {
 import { User } from "../../../entity/User";
 
 @ValidatorConstraint({ async: true })
-export class IsEmailUserAlreadyExistConstraint
+export class IsEmailAlreadyExistConstraint
   implements ValidatorConstraintInterface {
   validate(email: string) {
     return User.findOne({ where: { email } }).then(user => {
@@ -24,7 +24,7 @@ export function IsEmailAlreadyExist(validationOptions?: ValidationOptions) {
       propertyName: propertyName,
       options: validationOptions,
       constraints: [],
-      validator: IsEmailUserAlreadyExistConstraint
+      validator: IsEmailAlreadyExistConstraint
     });
   };
 }

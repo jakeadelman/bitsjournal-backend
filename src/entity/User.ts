@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
 import { ObjectType, Field, ID, Root } from "type-graphql";
-import { IsEmailAlreadyExist } from "src/modules/user/register/isEmailAlreadyExist";
+import { IsEmailAlreadyExist } from "../modules/user/register/isEmailAlreadyExist";
 
 @ObjectType()
 @Entity()
