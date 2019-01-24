@@ -1,7 +1,7 @@
 import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
 import bcrypt from "bcryptjs";
 import { User } from "../../entity/User";
-import { MyContext } from "../types/MyContext";
+import { MyContext } from "../../types/MyContext";
 
 @Resolver()
 export class LoginResolver {
@@ -20,6 +20,10 @@ export class LoginResolver {
     const valid = await bcrypt.compare(password, user.password);
 
     if (!valid) {
+      return null;
+    }
+
+    if (!user.confirmed) {
       return null;
     }
 

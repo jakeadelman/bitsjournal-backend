@@ -11,12 +11,21 @@ import cors from "cors";
 import { RegisterResolver } from "./modules/user/Register";
 import { LoginResolver } from "./modules/user/Login";
 import { MeResolver } from "./modules/user/Me";
+import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
 
 const main = async () => {
   await createConnection();
 
   const schema = await buildSchema({
-    resolvers: [RegisterResolver, LoginResolver, MeResolver]
+    resolvers: [
+      RegisterResolver,
+      LoginResolver,
+      MeResolver,
+      ConfirmUserResolver
+    ],
+    authChecker: ({ context: { req } }) => {
+      return !!req.session.userId;
+    }
   });
 
   const apolloServer = new ApolloServer({
@@ -29,12 +38,9 @@ const main = async () => {
 
   const RedisStore = connectRedis(session);
 
-  app.use(
-    cors({
-      credentials: true,
-      origin: "http://localhost:3000"
-    })
-  );
+  app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+
+  // const corsOptions = { credentials: true, origin: "http://localhost:3000" };
 
   app.use(
     session({
@@ -46,7 +52,8 @@ const main = async () => {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        httpOnly: true,
+        httpOnly: false,
+        // httpOnly: false,
         secure: process.env.NODE_ENV === "production",
         maxAge: 1000 * 60 * 60 * 24 * 7 * 365 // 7 years
       }
