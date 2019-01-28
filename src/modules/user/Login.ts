@@ -3,14 +3,16 @@ import bcrypt from "bcryptjs";
 import { User } from "../../entity/User";
 import { MyContext } from "../../types/MyContext";
 
+const jwt = require("jsonwebtoken");
+
 @Resolver()
 export class LoginResolver {
-  @Mutation(() => User, { nullable: true })
+  @Mutation(() => String, { nullable: true })
   async login(
     @Arg("email") email: string,
     @Arg("password") password: string,
     @Ctx() ctx: MyContext
-  ): Promise<User | null> {
+  ): Promise<User | string | null> {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
@@ -28,7 +30,17 @@ export class LoginResolver {
     }
 
     ctx.req.session!.userId = user.id;
+    // console.log(ctx.req.session!);
 
-    return user;
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email
+      },
+      "somesupersecret",
+      { expiresIn: "1y" }
+    );
+
+    return token;
   }
 }

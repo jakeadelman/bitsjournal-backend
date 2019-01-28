@@ -35,12 +35,9 @@ const main = async () => {
   });
 
   const app = Express();
-
-  const RedisStore = connectRedis(session);
-
   app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
-  // const corsOptions = { credentials: true, origin: "http://localhost:3000" };
+  const RedisStore = connectRedis(session);
 
   app.use(
     session({
@@ -53,8 +50,7 @@ const main = async () => {
       saveUninitialized: false,
       cookie: {
         httpOnly: false,
-        // httpOnly: false,
-        secure: process.env.NODE_ENV === "production",
+        // secure: process.env.NODE_ENV === "production",
         maxAge: 1000 * 60 * 60 * 24 * 7 * 365 // 7 years
       }
     })
