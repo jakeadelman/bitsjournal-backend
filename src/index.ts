@@ -35,10 +35,10 @@ const main = async () => {
   });
 
   const app = Express();
-  app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
   const RedisStore = connectRedis(session);
 
+  app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
   app.use(
     session({
       store: new RedisStore({
@@ -55,7 +55,7 @@ const main = async () => {
       }
     })
   );
-
+  // const corsOptions = { credentials: true, origin: "http://localhost:3000" };
   apolloServer.applyMiddleware({ app });
 
   app.listen(4000, () => {
