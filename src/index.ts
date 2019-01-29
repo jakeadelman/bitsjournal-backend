@@ -1,7 +1,7 @@
+import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
 import Express from "express";
 import { buildSchema, formatArgumentValidationError } from "type-graphql";
-import "reflect-metadata";
 import { createConnection } from "typeorm";
 import session from "express-session";
 import connectRedis from "connect-redis";
@@ -50,13 +50,13 @@ const main = async () => {
       saveUninitialized: false,
       cookie: {
         httpOnly: false,
-        // secure: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === "production",
         maxAge: 1000 * 60 * 60 * 24 * 7 * 365 // 7 years
       }
     })
   );
-  // const corsOptions = { credentials: true, origin: "http://localhost:3000" };
-  apolloServer.applyMiddleware({ app });
+
+  apolloServer.applyMiddleware({ app, cors: false });
 
   app.listen(4000, () => {
     console.log("server started on http://localhost:4000/graphql");
