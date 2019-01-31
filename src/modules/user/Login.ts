@@ -10,25 +10,30 @@ export class LoginResolver {
     @Arg("email") email: string,
     @Arg("password") password: string,
     @Ctx() ctx: MyContext
-  ): Promise<null> {
+  ): Promise<null | boolean> {
     const user = await User.findOne({ where: { email } });
+    console.log("fetching user...");
 
     if (!user) {
+      console.log("no user found");
       return null;
     }
 
     const valid = await bcrypt.compare(password, user.password);
 
     if (!valid) {
+      console.log("user not valid");
       return null;
     }
 
     if (!user.confirmed) {
+      console.log("user not confirmed");
       return null;
     }
 
     ctx.req.session!.userId = user.id;
+    console.log("user has been logged in");
 
-    return null;
+    return true;
   }
 }

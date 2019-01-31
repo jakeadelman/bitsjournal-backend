@@ -1,0 +1,75 @@
+{
+  "name": "scrape-twitter",
+  "description": "Access Twitter data without an API key.",
+  "version": "0.11.1",
+  "author": "Seb Insua <me@sebinsua.com>",
+  "bin": {
+    "scrape-twitter": "./bin/scrape-twitter.js",
+    "scrape-twitter-timeline": "./bin/scrape-twitter-timeline.js",
+    "scrape-twitter-likes": "./bin/scrape-twitter-likes.js",
+    "scrape-twitter-profile": "./bin/scrape-twitter-profile.js",
+    "scrape-twitter-list": "./bin/scrape-twitter-list.js",
+    "scrape-twitter-connections": "./bin/scrape-twitter-connections.js",
+    "scrape-twitter-conversation": "./bin/scrape-twitter-conversation.js",
+    "scrape-twitter-search": "./bin/scrape-twitter-search.js"
+  },
+  "main": "dist",
+  "engines": {
+    "node": ">= 6"
+  },
+  "config": {
+    "ghooks": {
+      "commit-msg": "validate-commit-msg",
+      "pre-push": "npm test"
+    }
+  },
+  "scripts": {
+    "test": "npm run -s lint && npm run -s unit",
+    "lint": "eslint {bin,src,test} --fix",
+    "unit": "jest --testEnvironment=node",
+    "build": "rimraf dist && babel src --out-dir dist",
+    "push": "git push --follow-tags origin master",
+    "release": "npm test && npm run -s build && standard-version && npm run -s push && npm publish"
+  },
+  "dependencies": {
+    "JSONStream": "^1.3.4",
+    "cheerio": "^1.0.0-rc.2",
+    "debug": "^3.1.0",
+    "dotenv": "^6.0.0",
+    "execa": "^1.0.0",
+    "expand-home-dir": "^0.0.3",
+    "fetch-cookie": "^0.7.2",
+    "isomorphic-fetch": "^2.2.1",
+    "meow": "^5.0.0",
+    "pump": "^3.0.0",
+    "query-string": "^6.1.0",
+    "readable-stream": "^3.0.2",
+    "touch": "^3.1.0",
+    "url-regex": "^4.1.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^9.0.0",
+    "babel-jest": "^23.4.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^5.4.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.0",
+    "eslint-plugin-standard": "^4.0.0",
+    "jest": "^23.5.0",
+    "prettier": "^1.14.2",
+    "rimraf": "^2.6.2",
+    "standard-version": "^4.4.0",
+    "stream-to-promise": "^2.2.0",
+    "validate-commit-msg": "^2.14.0"
+  },
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sebinsua/scrape-twitter.git"
+  }
+}

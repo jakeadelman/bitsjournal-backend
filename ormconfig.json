@@ -5,7 +5,7 @@
   "port": 5432,
   "username": "manx",
   "password": "jakeadelman",
-  "database": "crypt-sent",
+  "database": "senti-crypt",
   "synchronize": true,
   "logging": true,
   "entities": ["src/entity/*.*"]
