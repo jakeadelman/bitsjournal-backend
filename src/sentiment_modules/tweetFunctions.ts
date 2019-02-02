@@ -27,16 +27,22 @@ export const checkTweet = (array: any[], repository: any) => {
         newRay.push(r);
         count += 1;
         if (count == 50) {
-          console.log(`newRay length is ${newRay.length}`);
+          console.log(
+            chalk.green(`>> ${newRay.length} new tweets for term `) +
+              chalk.underline.bold.blue(`${r.query}`)
+          );
           resolve(newRay);
         }
       } else {
         count += 1;
         if (count == 50 && !!newRay[0]) {
-          console.log(`newRay length is ${newRay.length}`);
+          console.log(
+            chalk.green(`>> ${newRay.length} new tweets for term `) +
+              chalk.underline.bold.blue(`${r.query}`)
+          );
           resolve(newRay);
         } else if (count == 50 && !newRay[0]) {
-          reject(`no new tweets`);
+          reject(`no new tweets for term ` + chalk.green(`${r.query}`));
         }
       }
     });
@@ -86,7 +92,8 @@ export const fetchSentiment = (
               `[` +
                 chalk.green(`ADD`) +
                 `]` +
-                `: added ${array.length} tweets to database`
+                `: added ${array.length} tweets to database for` +
+                chalk.underline.green(`${r.query}`)
             );
           }
         });
@@ -121,7 +128,11 @@ export const getSentiment = (array: any[], repository: any) => {
       tweet.retweetCount = r.retweetCount;
       tweet.favoriteCount = r.favoriteCount;
       let result = sentiment.analyze(r.text);
-      console.log(result);
+      tweet.score = result.score;
+      tweet.comparative = result.comparative.toString();
+      tweet.positiveWords = result.positive.toString();
+      tweet.negativeWords = result.negative.toString();
+
       // save tweet
       await repository.save(tweet);
       count += 1;
@@ -130,7 +141,8 @@ export const getSentiment = (array: any[], repository: any) => {
           `[` +
             chalk.green(`ADD`) +
             `]` +
-            `: added ${array.length} tweets to database`
+            `: added ${array.length} tweets to database for term ` +
+            chalk.green(`${r.query}`)
         );
       } else {
         return;

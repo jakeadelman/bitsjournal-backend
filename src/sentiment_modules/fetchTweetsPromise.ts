@@ -5,6 +5,7 @@ import { createConnections } from "typeorm";
 import { checkTweet, format, getSentiment } from "./tweetFunctions";
 const dateFormat = require("dateformat");
 const chalk = require("chalk");
+
 const getTweets = (word: string, by: string, connections: any) => {
   return new Promise(async (resolve, reject) => {
     let arr: any[] = [];
@@ -13,7 +14,7 @@ const getTweets = (word: string, by: string, connections: any) => {
     // create stream
     const stream = new twit.TweetStream(word, by, { count: 50 });
 
-    stream.on("error", r => {
+    stream.on("error", (r: any) => {
       console.log("got error");
       return `here is err: ${r}`;
     });
@@ -78,7 +79,7 @@ const getTweets = (word: string, by: string, connections: any) => {
             });
         })
         .catch((r: any) => {
-          reject(`[` + chalk.red(`ERR`) + `]` + `: ${r}`);
+          reject(chalk.red(`>> ${r}`));
         });
     });
   });
@@ -152,4 +153,4 @@ setInterval(async function() {
         }
       });
   });
-}, 10000);
+}, 60000);

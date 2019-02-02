@@ -82,7 +82,7 @@ export class Tweet {
 
   @Field()
   @Column()
-  comparative: number;
+  comparative: string;
 
   @Field()
   @Column()
