@@ -1,9 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 import { ObjectType, Field, ID } from "type-graphql";
 
 @ObjectType()
 @Entity()
-export class Tweet extends BaseEntity {
+export class Tweet {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
@@ -14,7 +14,7 @@ export class Tweet extends BaseEntity {
 
   @Field()
   @Column()
-  tweetId: number;
+  tweetId: string;
 
   @Field()
   @Column()
@@ -75,4 +75,20 @@ export class Tweet extends BaseEntity {
   @Field()
   @Column()
   favoriteCount: number;
+
+  @Field()
+  @Column()
+  score: number;
+
+  @Field()
+  @Column()
+  comparative: number;
+
+  @Field()
+  @Column()
+  positiveWords: string;
+
+  @Field()
+  @Column()
+  negativeWords: string;
 }

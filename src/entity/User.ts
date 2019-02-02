@@ -3,7 +3,7 @@ import { ObjectType, Field, ID, Root } from "type-graphql";
 import { IsEmailAlreadyExist } from "../modules/user/register/isEmailAlreadyExist";
 
 @ObjectType()
-@Entity()
+@Entity("users")
 export class User extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
