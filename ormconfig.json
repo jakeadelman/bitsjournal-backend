@@ -1,11 +1,11 @@
 {
   "name": "default",
   "type": "postgres",
-  "host": "localhost",
+  "host": "instagauge.cmxxymh53lj2.us-east-1.rds.amazonaws.com",
   "port": 5432,
   "username": "manx",
   "password": "jakeadelman",
-  "database": "senti-crypt",
+  "database": "instagauge",
   "synchronize": true,
   "logging": true,
   "entities": ["src/entity/*.*"]
