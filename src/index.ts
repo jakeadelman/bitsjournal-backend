@@ -12,7 +12,7 @@ import { RegisterResolver } from "./modules/user/Register";
 import { LoginResolver } from "./modules/user/Login";
 import { MeResolver } from "./modules/user/Me";
 import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
-// import { AddTweetResolver } from "./modules/tweet/addTweet";
+import { FetchTweetResolver } from "./modules/tweet/getTweets";
 
 const main = async () => {
   await createConnection();
@@ -22,8 +22,8 @@ const main = async () => {
       RegisterResolver,
       LoginResolver,
       MeResolver,
-      ConfirmUserResolver
-      // AddTweetResolver
+      ConfirmUserResolver,
+      FetchTweetResolver
     ],
     authChecker: ({ context: { req } }) => {
       return !!req.session.userId;
