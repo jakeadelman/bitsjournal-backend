@@ -6,7 +6,7 @@ import { createConnection } from "typeorm";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import { redis } from "./redis";
-// import cors from "cors";
+import cors from "cors";
 
 import { RegisterResolver } from "./modules/user/Register";
 import { LoginResolver } from "./modules/user/Login";
@@ -40,7 +40,7 @@ const main = async () => {
 
   const RedisStore = connectRedis(session);
 
-  // app.use(cors({ credentials: true, origin: "https://socialslant.io" }));
+  app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
   app.use(
     session({
       store: new RedisStore({
@@ -52,7 +52,7 @@ const main = async () => {
       saveUninitialized: false,
       cookie: {
         httpOnly: false,
-        // secure: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === "production",
         maxAge: 1000 * 60 * 60 * 24 * 7 * 365 // 7 years
       }
     })
