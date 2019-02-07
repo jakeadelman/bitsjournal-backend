@@ -5,5 +5,5 @@ export const createConfirmationUrl = async (userId: number) => {
   const token = v4();
   await redis.set(token, userId, "ex", 60 * 60 * 24); // 1 day expiration
 
-  return `http://instaslant.com/confirm?id=${token}`;
+  return `https://instaslant.com/confirm?id=${token}`;
 };
