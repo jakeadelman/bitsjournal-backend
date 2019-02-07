@@ -90,22 +90,22 @@ setInterval(async function() {
     {
       name: "default",
       type: "postgres",
-      host: "localhost",
+      host: "instagauge.cmxxymh53lj2.us-east-1.rds.amazonaws.com",
       port: 5432,
       username: "manx",
       password: "jakeadelman",
-      database: "senti-crypt",
+      database: "instagauge",
       logging: false,
       entities: [__dirname + "/../entity/*.*"]
     },
     {
       name: "test2",
       type: "postgres",
-      host: "localhost",
+      host: "instagauge.cmxxymh53lj2.us-east-1.rds.amazonaws.com",
       port: 5432,
       username: "manx",
       password: "jakeadelman",
-      database: "senti-crypt",
+      database: "instagauge",
       logging: false,
       entities: [__dirname + "/../entity/*.*"]
     }

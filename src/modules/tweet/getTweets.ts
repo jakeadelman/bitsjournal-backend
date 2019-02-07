@@ -23,7 +23,7 @@ export class FetchTweetResolver {
       port: 5432,
       username: "manx",
       password: "jakeadelman",
-      database: "senti-crypt",
+      database: "instagauge",
       logging: true,
       entities: [__dirname + "/../../entity/*.*"]
     });

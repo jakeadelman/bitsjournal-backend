@@ -13,6 +13,7 @@ import { LoginResolver } from "./modules/user/Login";
 import { MeResolver } from "./modules/user/Me";
 import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
 import { FetchTweetResolver } from "./modules/tweet/getTweets";
+import { AddInstaUserResolver } from "./modules/user/instagram/addUser";
 
 const main = async () => {
   await createConnection();
@@ -23,7 +24,8 @@ const main = async () => {
       LoginResolver,
       MeResolver,
       ConfirmUserResolver,
-      FetchTweetResolver
+      FetchTweetResolver,
+      AddInstaUserResolver
     ],
     authChecker: ({ context: { req } }) => {
       return !!req.session.userId;
