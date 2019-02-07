@@ -29,8 +29,9 @@ export class RegisterResolver {
       email,
       password: hashedPassword
     }).save();
-
+    console.log("about to send email");
     await sendEmail(email, await createConfirmationUrl(user.id));
+    console.log("sent email");
 
     return user;
   }
