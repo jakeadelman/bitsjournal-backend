@@ -40,7 +40,12 @@ const main = async () => {
 
   const RedisStore = connectRedis(session);
 
-  app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+  app.use(
+    cors({
+      credentials: true,
+      origin: ["http://localhost:3000", "https://socialslant.io"]
+    })
+  );
   app.use(
     session({
       store: new RedisStore({
