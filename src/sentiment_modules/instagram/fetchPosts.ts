@@ -1,8 +1,9 @@
-// import { User } from "../../entity/User";
-// import { createConnection, Connection } from "typeorm";
+import { InstaUser } from "../../entity/instagram/instaUser";
+import { createConnection } from "typeorm";
+// import { removeEmojis } from "./removeEmojis";
 // const chalk = require("chalk");
 export const fetchDan = (
-  //   connection: Connection,
+  // connection: Connection,
   instaUser: string,
   instaUsername: string,
   instaPassword: string
@@ -25,14 +26,27 @@ export const fetchDan = (
 
           return [session, getty];
         })
-        .spread((session, results) => {
+        .spread(async (session, results) => {
           // results.map(async (res: any) => {
           // for (let i = 0; i < 4; i++) {
           let res = results[0];
           let id = res.id;
           // console.log(res.comments, "THIS RES");
           let comments = new Client.Feed.MediaComments(session, id);
-          comments.get().then(r => console.log(r));
+          comments.iteration = 2;
+          // console.log(comments.keys());
+          // let newcoms = await comments.get();
+          // console.log(newcoms[0].keys());
+          // console.log(newcoms);
+          comments.get().then(r => {
+            r.map(comm => {
+              console.log(comm);
+              // removeEmojis(comm._params.text).then(r => {
+              //   console.log(r);
+              // });
+            });
+          });
+          // console.log(connection);
           resolve(true);
         });
     }
@@ -42,21 +56,38 @@ export const fetchDan = (
 const startMain = async () => {
   const user = "momo_52_mo";
   const pass = "jakeadelman";
-  //   const connection = await createConnection({
-  //     type: "postgres",
-  //     host: "localhost",
-  //     port: 5432,
-  //     username: "manx",
-  //     password: "jakeadelman",
-  //     database: "danlok",
-  //     entities: [__dirname + "/entity/*.*"]
-  //   });
-  let userList = ["danlok"];
+  let entLo1 = __dirname + "/../../entity/*.*";
+  let entLo2 = __dirname + "/../../entity/instagram/*.*";
+  const connection = await createConnection({
+    type: "postgres",
+    host: "instagauge.cmxxymh53lj2.us-east-1.rds.amazonaws.com",
+    port: 5432,
+    username: "manx",
+    password: "jakeadelman",
+    database: "instagauge",
+    entities: [entLo1, entLo2]
+  });
+  let instaUserRepo = await connection.getRepository(InstaUser);
+  let instaUserList = await instaUserRepo.find({ select: ["name"] });
+  // let userList = ["danlok"];
+  let mappedList: any[] = await mapToList(instaUserList);
+  console.log(mappedList);
   setInterval(function() {
-    userList.map(instaUser => {
+    mappedList.map(instaUser => {
       fetchDan(instaUser, user, pass);
     });
-  }, 6000);
+  }, 10000);
+  // console.log(instaUserList[0].name);
+};
+
+const mapToList = list => {
+  return new Promise<any>(resolve => {
+    let arr: any[] = [];
+    list.map(u => {
+      arr.push(u.name);
+    });
+    resolve(arr);
+  });
 };
 
 startMain();

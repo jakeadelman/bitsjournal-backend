@@ -1184,6 +1184,11 @@ bcryptjs@^2.4.3:
   resolved "https://registry.yarnpkg.com/bcryptjs/-/bcryptjs-2.4.3.tgz#9ab5627b93e60621ff7cdac5da9733027df1d0cb"
   integrity sha1-mrVie5PmBiH/fNrF2pczAn3x0Ms=
 
+bignumber.js@^2.0.7:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-2.4.0.tgz#838a992da9f9d737e0f4b2db0be62bb09dd0c5e8"
+  integrity sha1-g4qZLan51zfg9LLbC+YrsJ3Qxeg=
+
 bignumber.js@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-4.1.0.tgz#db6f14067c140bd46624815a7916c92d9b6c24b1"
@@ -1998,6 +2003,13 @@ electron-to-chromium@^1.3.47:
   version "1.3.109"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.109.tgz#ee04a55a5157a5580a5ea88e526b02c84a3a7bc8"
   integrity sha512-1qhgVZD9KIULMyeBkbjU/dWmm30zpPUfdWZfVO3nPhbtqMHJqHr4Ua5wBcWtAymVFrUCuAJxjMF1OhG+bR21Ow==
+
+emoji-tree@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/emoji-tree/-/emoji-tree-1.1.2.tgz#7e28c72fc1a5d35ea454ac0bf0b0992862ab9842"
+  integrity sha512-dIvFd/fwxsCglIgKFkGZUQAUWiMFs4ypjdpcGKR3mjc7tDrXFw+w8LHlXaVw2qLQhRiwbcrjNjKuWi3hBC740g==
+  dependencies:
+    lodash "^4.16.6"
 
 encodeurl@~1.0.2:
   version "1.0.2"
@@ -2817,6 +2829,13 @@ ini@^1.3.4, ini@~1.3.0:
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
   integrity sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
 
+instagram-id-to-url-segment@^0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/instagram-id-to-url-segment/-/instagram-id-to-url-segment-0.0.0.tgz#1936875dceed74102088ae183d47d47c598ee5ba"
+  integrity sha1-GTaHXc7tdBAgiK4YPUfUfFmO5bo=
+  dependencies:
+    bignumber.js "^2.0.7"
+
 instagram-private-api@^0.6.8:
   version "0.6.8"
   resolved "https://registry.yarnpkg.com/instagram-private-api/-/instagram-private-api-0.6.8.tgz#2a47d4497cada1782dff1205525fbd981dd157c4"
@@ -3589,7 +3608,7 @@ lodash.toarray@^4.4.0:
   resolved "https://registry.yarnpkg.com/lodash.toarray/-/lodash.toarray-4.4.0.tgz#24c4bfcd6b2fba38bfd0594db1179d8e9b656561"
   integrity sha1-JMS/zWsvuji/0FlNsRedjptlZWE=
 
-lodash@4.x, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.4:
+lodash@4.x, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.16.6, lodash@^4.17.10, lodash@^4.17.4:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
