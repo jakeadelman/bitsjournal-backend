@@ -3,6 +3,7 @@ import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
 import { createConnection } from "typeorm";
 import { User } from "../../../entity/User";
 import { MyContext } from "../../../types/MyContext";
+import { InstaUser } from "../../../entity/instagram/instaUser";
 
 @Resolver()
 export class AddInstaUserResolver {
@@ -11,8 +12,10 @@ export class AddInstaUserResolver {
     @Arg("account") account: string,
     @Ctx() ctx: MyContext
   ): Promise<null | boolean> {
+    let entLo1 = __dirname + "/../../../entity/*.*";
+    let entLo2 = __dirname + "/../../../entity/instagram/*.*";
     const connection = await createConnection({
-      name: "instaconn",
+      name: "instaconnection",
       type: "postgres",
       host: "instagauge.cmxxymh53lj2.us-east-1.rds.amazonaws.com",
       port: 5432,
@@ -20,7 +23,7 @@ export class AddInstaUserResolver {
       password: "jakeadelman",
       database: "instagauge",
       logging: true,
-      entities: [__dirname + "/../../../entity/*.*"]
+      entities: [entLo1, entLo2]
     });
 
     if (!ctx.req.session!.userId) {
@@ -30,28 +33,37 @@ export class AddInstaUserResolver {
     let theUser = ctx.req.session!.userId;
 
     let userRepo = connection.getRepository(User);
-    let instaUsers = await userRepo.findOne({
+    let instaUserRepo = connection.getRepository(InstaUser);
+    let user = await userRepo.findOne({
       where: { id: theUser },
-      select: ["instagramUsers"]
+      relations: ["instagramUsers"]
     });
-    console.log(instaUsers);
-    let newInstaUsers;
-    if (instaUsers == undefined) {
-      newInstaUsers = [];
-      newInstaUsers += account;
-    } else if (instaUsers) {
-      instaUsers.instagramUsers.push(account);
-      newInstaUsers = instaUsers.instagramUsers;
+
+    if (user == undefined) {
+      return false;
     }
 
-    let response = await connection
-      .createQueryBuilder()
-      .update(User)
-      .set({ instagramUsers: newInstaUsers })
-      .where("id = :id", { id: theUser })
-      .execute();
+    let isFalse = false;
+    user.instagramUsers.map(us => {
+      if (us.name == account) {
+        console.log("THIS IS THE FUCKING SAME");
+        isFalse = true;
+      } else {
+        return;
+      }
+    });
 
-    console.log(response);
+    if (!!isFalse) {
+      connection.close();
+      return false;
+    }
+
+    let newInstaUser = new InstaUser();
+    newInstaUser.name = account;
+    newInstaUser.user = user;
+    await instaUserRepo.save(newInstaUser);
+
+    console.log(account);
     connection.close();
 
     return true;

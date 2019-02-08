@@ -1,6 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  OneToMany
+} from "typeorm";
 import { ObjectType, Field, ID, Root } from "type-graphql";
 import { IsEmailAlreadyExist } from "../modules/user/register/isEmailAlreadyExist";
+import { InstaUser } from "./instagram/instaUser";
 
 @ObjectType()
 @Entity("users")
@@ -33,6 +40,9 @@ export class User extends BaseEntity {
   @Column("bool", { default: false })
   confirmed: boolean;
 
-  @Column("simple-array", { nullable: true })
-  instagramUsers: string[];
+  // @Column("simple-array", { nullable: true })
+  // instagramUsers: string[];
+
+  @OneToMany(() => InstaUser, instagramUser => instagramUser.user)
+  instagramUsers: InstaUser[];
 }
