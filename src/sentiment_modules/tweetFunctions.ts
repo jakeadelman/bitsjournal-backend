@@ -17,6 +17,7 @@ export const format = (subject: string) => {
 
 export const checkTweet = (array: any[], repository: any) => {
   return new Promise((resolve, reject) => {
+    console.log("in check tweet");
     let newRay: any[] = [];
     let count: number = 0;
     array.map(async (r: any) => {
@@ -24,9 +25,11 @@ export const checkTweet = (array: any[], repository: any) => {
         tweetId: r.tweetId
       });
       if (typeof id == "undefined") {
+        // console.log("was undefined");
         newRay.push(r);
         count += 1;
-        if (count == 50) {
+        // console.log(count, array.length);
+        if (count == array.length) {
           console.log(
             chalk.green(`>> ${newRay.length} new tweets for term `) +
               chalk.underline.bold.blue(`${r.query}`)
@@ -35,13 +38,13 @@ export const checkTweet = (array: any[], repository: any) => {
         }
       } else {
         count += 1;
-        if (count == 50 && !!newRay[0]) {
+        if (count == array.length && !!newRay[0]) {
           console.log(
             chalk.green(`>> ${newRay.length} new tweets for term `) +
               chalk.underline.bold.blue(`${r.query}`)
           );
           resolve(newRay);
-        } else if (count == 50 && !newRay[0]) {
+        } else if (count == array.length && !newRay[0]) {
           reject(`no new tweets for term ` + chalk.green(`${r.query}`));
         }
       }
@@ -55,6 +58,7 @@ export const fetchSentiment = (
   email: string
 ) => {
   return new Promise((resolve, reject) => {
+    console.log("in sentiment");
     let senti = new sentiment140({
       auth: email
     });

@@ -3,11 +3,13 @@ import {
   PrimaryGeneratedColumn,
   Column,
   BaseEntity,
-  OneToMany
+  OneToMany,
+  ManyToMany
 } from "typeorm";
 import { ObjectType, Field, ID, Root } from "type-graphql";
 import { IsEmailAlreadyExist } from "../modules/user/register/isEmailAlreadyExist";
 import { InstaUser } from "./instagram/instaUser";
+import { SearchTerm } from "./SearchTerm";
 
 @ObjectType()
 @Entity("users")
@@ -42,6 +44,10 @@ export class User extends BaseEntity {
 
   // @Column("simple-array", { nullable: true })
   // instagramUsers: string[];
+  @ManyToMany(() => SearchTerm, searchterm => searchterm.users, {
+    nullable: true
+  })
+  searchterms: SearchTerm[];
 
   @OneToMany(() => InstaUser, instagramUser => instagramUser.user)
   instagramUsers: InstaUser[];

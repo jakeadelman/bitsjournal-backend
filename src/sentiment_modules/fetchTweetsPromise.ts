@@ -6,13 +6,29 @@ import { checkTweet, format, getSentiment } from "./tweetFunctions";
 const dateFormat = require("dateformat");
 const chalk = require("chalk");
 
-const getTweets = (word: string, by: string, connections: any) => {
+const getTweets = (word: string, by: string) => {
   return new Promise(async (resolve, reject) => {
     let arr: any[] = [];
-    const tweetRepository = connections[1].getRepository(Tweet);
 
+    console.log("at beginning");
     // create stream
     const stream = new twit.TweetStream(word, by, { count: 50 });
+    let entLo1 = __dirname + "/../entity/*.*";
+    let entLo2 = __dirname + "/../entity/instagram/*.*";
+    const conns = await createConnections([
+      {
+        name: word,
+        type: "postgres",
+        host: "instagauge.cmxxymh53lj2.us-east-1.rds.amazonaws.com",
+        port: 5432,
+        username: "manx",
+        password: "jakeadelman",
+        database: "instagauge",
+        logging: false,
+        entities: [entLo1, entLo2]
+      }
+    ]);
+    const tweetRepository = conns[0].getRepository(Tweet);
 
     stream.on("error", (r: any) => {
       console.log("got error");
@@ -65,30 +81,41 @@ const getTweets = (word: string, by: string, connections: any) => {
     });
 
     stream.on("end", async () => {
-      checkTweet(arr, tweetRepository)
-        .then((r: any) => {
-          return r;
-        })
-        .then((r: any[]) => {
-          getSentiment(r, tweetRepository)
-            .then(r => {
-              resolve(r);
-            })
-            .catch(err => {
-              reject(new Error(err));
-            });
-        })
-        .catch((r: any) => {
-          reject(chalk.red(`>> ${r}`));
-        });
+      console.log(`found ${arr.length} tweets for ${word}`);
+      if (arr.length == 0) {
+        conns[0].close();
+        reject("no new tweets");
+      } else {
+        checkTweet(arr, tweetRepository)
+          .then((r: any) => {
+            return r;
+          })
+          .then((r: any[]) => {
+            getSentiment(r, tweetRepository)
+              .then(r => {
+                conns[0].close();
+                resolve(r);
+              })
+              .catch(err => {
+                conns[0].close();
+                reject(new Error(err));
+              });
+          })
+          .catch((r: any) => {
+            conns[0].close();
+            reject(chalk.red(`>> ${r}`));
+          });
+      }
     });
   });
 };
 
 setInterval(async function() {
+  let entLo1 = __dirname + "/../entity/*.*";
+  let entLo2 = __dirname + "/../entity/instagram/*.*";
   const connections = await createConnections([
     {
-      name: "default",
+      name: "default2",
       type: "postgres",
       host: "instagauge.cmxxymh53lj2.us-east-1.rds.amazonaws.com",
       port: 5432,
@@ -96,7 +123,7 @@ setInterval(async function() {
       password: "jakeadelman",
       database: "instagauge",
       logging: false,
-      entities: [__dirname + "/../entity/*.*"]
+      entities: [entLo1, entLo2]
     },
     {
       name: "test2",
@@ -107,7 +134,7 @@ setInterval(async function() {
       password: "jakeadelman",
       database: "instagauge",
       logging: false,
-      entities: [__dirname + "/../entity/*.*"]
+      entities: [entLo1, entLo2]
     }
   ]);
   console.log(
@@ -125,7 +152,7 @@ setInterval(async function() {
         `: fetching tweets for term ` +
         chalk.underline.bold.green(`${term.term}`)
     );
-    getTweets(term.term, "top", connections)
+    getTweets(term.term, "top")
       .then((r: any) => {
         console.log(r);
         count += 1;
@@ -153,4 +180,4 @@ setInterval(async function() {
         }
       });
   });
-}, 60000);
+}, 10000);
