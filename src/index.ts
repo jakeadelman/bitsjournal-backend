@@ -16,7 +16,7 @@ import { FetchTweetResolver } from "./modules/tweet/getTweets";
 import { AddInstaUserResolver } from "./modules/user/instagram/addUser";
 import { AddSearchTermResolver } from "./modules/tweet/addSearchTerm";
 import { FetchTermResolver } from "./modules/user/fetchTerms";
-import { TweetByHour } from "./modules/tweet/tweetByHour";
+import { GetDailyTweet } from "./modules/tweet/tweetByHour";
 
 const main = async () => {
   await createConnection();
@@ -31,7 +31,7 @@ const main = async () => {
       AddInstaUserResolver,
       AddSearchTermResolver,
       FetchTermResolver,
-      TweetByHour
+      GetDailyTweet
     ],
     authChecker: ({ context: { req } }) => {
       return !!req.session.userId;
