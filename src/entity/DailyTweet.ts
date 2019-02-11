@@ -1,11 +1,11 @@
-import { Entity, Column } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 
 @ObjectType()
 @Entity()
-export class Tweet {
+export class DailyTweet {
   @Field()
-  @Column()
+  @PrimaryGeneratedColumn()
   query: string;
 
   @Field()

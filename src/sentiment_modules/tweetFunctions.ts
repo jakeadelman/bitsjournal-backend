@@ -126,7 +126,7 @@ export const getSentiment = (array: any[]) => {
         let entLo1 = __dirname + "/../entity/*.*";
         let entLo2 = __dirname + "/../entity/instagram/*.*";
         const newconn = await createConnection({
-          name: "word0",
+          name: "word0" + res[0].query,
           type: "postgres",
           host: "instagauge.cmxxymh53lj2.us-east-1.rds.amazonaws.com",
           port: 5432,
@@ -159,7 +159,7 @@ export const getSentiment = (array: any[]) => {
           tweet.favoriteCount = r.favoriteCount;
           tweet.polarity = r.polarity;
           await twRepo.save(tweet);
-          console.log(i + 1, array.length);
+          // console.log(i + 1, array.length);
           if (i + 1 == array.length) {
             console.log(`saved ${array.length} new tweets`);
             await newconn.close();
