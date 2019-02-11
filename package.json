@@ -23,6 +23,7 @@
     "instagram-private-api": "^0.6.8",
     "ioredis": "^4.5.1",
     "jsonwebtoken": "^8.4.0",
+    "node-fetch": "^2.3.0",
     "nodemailer": "^5.1.1",
     "pg": "^7.8.0",
     "reflect-metadata": "^0.1.13",

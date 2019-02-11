@@ -78,17 +78,21 @@ export class Tweet {
 
   @Field()
   @Column()
-  score: number;
+  polarity: number;
 
-  @Field()
-  @Column()
-  comparative: string;
+  //   @Field()
+  //   @Column()
+  //   score: number;
 
-  @Field()
-  @Column()
-  positiveWords: string;
+  //   @Field()
+  //   @Column()
+  //   comparative: string;
 
-  @Field()
-  @Column()
-  negativeWords: string;
+  //   @Field()
+  //   @Column()
+  //   positiveWords: string;
+
+  //   @Field()
+  //   @Column()
+  //   negativeWords: string;
 }

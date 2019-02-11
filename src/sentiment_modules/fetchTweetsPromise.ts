@@ -91,7 +91,7 @@ const getTweets = (word: string, by: string) => {
             return r;
           })
           .then((r: any[]) => {
-            getSentiment(r, tweetRepository)
+            getSentiment(r)
               .then(r => {
                 conns[0].close();
                 resolve(r);
@@ -180,4 +180,4 @@ setInterval(async function() {
         }
       });
   });
-}, 10000);
+}, 20000);
