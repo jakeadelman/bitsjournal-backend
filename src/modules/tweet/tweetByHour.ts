@@ -9,7 +9,7 @@ const dateformat = require("dateformat");
 
 @Resolver()
 export class TweetByHour {
-  @Query(() => [])
+  @Query(() => [Tweet])
   async tweetByHour(
     @Arg("query") query: string,
     @Ctx() ctx: MyContext

@@ -15,6 +15,7 @@
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
     "dateformat": "^3.0.3",
+    "dotenv": "^6.2.0",
     "emoji-tree": "^1.1.2",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
@@ -52,6 +53,7 @@
   "scripts": {
     "start": "ts-node-dev --respawn src/index.ts",
     "fetch-tweets": "ts-node-dev src/sentiment_modules/fetchTweetsPromise.ts",
-    "fetch-instagram": "ts-node-dev src/sentiment_modules/instagram/fetchPosts.ts"
+    "fetch-instagram": "ts-node-dev src/sentiment_modules/instagram/fetchPosts.ts",
+    "fetch-twitter-user": "ts-node-dev src/sentiment_modules/userTweetFetch.ts TWITTER_USERNAME=ifelsemanx TWITTER_PASSWORD=jakeadelman"
   }
 }
