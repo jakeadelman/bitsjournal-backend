@@ -19,7 +19,7 @@ export class FetchTweetResolver {
     const connection = await createConnection({
       name: "tweetconn",
       type: "postgres",
-      host: "instagauge.cmxxymh53lj2.us-east-1.rds.amazonaws.com",
+      host: "localhost",
       port: 5432,
       username: "manx",
       password: "jakeadelman",

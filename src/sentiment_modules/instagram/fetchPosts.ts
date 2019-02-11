@@ -60,7 +60,7 @@ const startMain = async () => {
   let entLo2 = __dirname + "/../../entity/instagram/*.*";
   const connection = await createConnection({
     type: "postgres",
-    host: "instagauge.cmxxymh53lj2.us-east-1.rds.amazonaws.com",
+    host: "localhost",
     port: 5432,
     username: "manx",
     password: "jakeadelman",

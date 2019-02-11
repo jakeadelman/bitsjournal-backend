@@ -19,7 +19,7 @@ const getTweets = (word: string, by: string) => {
       {
         name: word,
         type: "postgres",
-        host: "instagauge.cmxxymh53lj2.us-east-1.rds.amazonaws.com",
+        host: "localhost",
         port: 5432,
         username: "manx",
         password: "jakeadelman",
@@ -117,7 +117,7 @@ setInterval(async function() {
     {
       name: "default2",
       type: "postgres",
-      host: "instagauge.cmxxymh53lj2.us-east-1.rds.amazonaws.com",
+      host: "localhost",
       port: 5432,
       username: "manx",
       password: "jakeadelman",
@@ -128,7 +128,7 @@ setInterval(async function() {
     {
       name: "test2",
       type: "postgres",
-      host: "instagauge.cmxxymh53lj2.us-east-1.rds.amazonaws.com",
+      host: "localhost",
       port: 5432,
       username: "manx",
       password: "jakeadelman",
