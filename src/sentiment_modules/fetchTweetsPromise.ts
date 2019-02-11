@@ -180,4 +180,4 @@ setInterval(async function() {
         }
       });
   });
-}, 20000);
+}, 1000000);
