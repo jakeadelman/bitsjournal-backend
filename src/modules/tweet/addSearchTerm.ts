@@ -29,6 +29,7 @@ export class AddSearchTermResolver {
 
     if (!ctx.req.session!.userId) {
       connection.close();
+      console.log("not logged in");
       return null;
     }
 

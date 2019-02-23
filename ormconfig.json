@@ -8,5 +8,9 @@
   "database": "instagauge",
   "synchronize": true,
   "logging": true,
-  "entities": ["src/entity/*.*", "src/entity/instagram/*.*"]
+  "entities": [
+    "src/entity/*.*",
+    "src/entity/instagram/*.*",
+    "src/entity/sentiment/*.*"
+  ]
 }

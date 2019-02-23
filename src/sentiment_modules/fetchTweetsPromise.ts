@@ -115,7 +115,7 @@ setInterval(async function() {
   let entLo2 = __dirname + "/../entity/instagram/*.*";
   const connections = await createConnections([
     {
-      name: "default2",
+      name: "defaulty2",
       type: "postgres",
       host: "localhost",
       port: 5432,
@@ -126,7 +126,7 @@ setInterval(async function() {
       entities: [entLo1, entLo2]
     },
     {
-      name: "test2",
+      name: "testy2",
       type: "postgres",
       host: "localhost",
       port: 5432,
@@ -162,8 +162,6 @@ setInterval(async function() {
           console.log(
             `[` + chalk.blue(`PG`) + `]:` + chalk.red(` closed connections`)
           );
-        } else {
-          return;
         }
       })
       .catch((r: any) => {
@@ -175,9 +173,7 @@ setInterval(async function() {
           console.log(
             `[` + chalk.blue(`PG`) + `]:` + chalk.red(` closed connections`)
           );
-        } else {
-          return;
         }
       });
   });
-}, 200000);
+}, 250000);

@@ -115,6 +115,7 @@ export const getSentiment = (array: any[]) => {
     let dict = {};
     dict["data"] = array;
     // let count = 0
+    console.log("about to fetch sentiment");
 
     fetch("http://127.0.0.1:5000/post", {
       method: "post",

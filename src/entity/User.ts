@@ -42,8 +42,6 @@ export class User extends BaseEntity {
   @Column("bool", { default: false })
   confirmed: boolean;
 
-  // @Column("simple-array", { nullable: true })
-  // instagramUsers: string[];
   @ManyToMany(() => SearchTerm, searchterm => searchterm.users, {
     nullable: true
   })
