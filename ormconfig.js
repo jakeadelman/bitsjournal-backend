@@ -7,7 +7,11 @@ if (process.env.NODE_ENV === "production") {
     username: "doadmin",
     password: "i3px3pqqw3h11uh1",
     database: "defaultdb",
-    ssl: { ca: "/etc/ssl/certs/ca-certificates.crt" },
+    extra: { ssl: true },
+    ssl: {
+      rejectUnauthorized: false,
+      ca: "/etc/ssl/certs/ca-certificates.crt"
+    },
     synchronize: true,
     logging: true,
     entities: [
