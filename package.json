@@ -55,7 +55,9 @@
     "typescript": "^3.2.4"
   },
   "scripts": {
-    "start": "ts-node-dev --respawn src/index.ts",
+    "start": "ts-node-dev src/index.ts",
+    "start:prod": "NODE_ENV=production DB_HOST=tradrr-psql-do-user-3307088-0.db.ondigitalocean.com DB_USER=doadmin DB_NAME=defaultdb DB_PASS=i3px3pqqw3h11uh1 DB_PORT=25060 ts-node-dev --respawn src/index.ts",
+    "start:dev": "ts-node-dev --respawn src/index.ts",
     "fetch-tweets": "ts-node-dev src/sentiment_modules/fetchTweetsPromise.ts",
     "fetch-instagram": "ts-node-dev src/sentiment_modules/instagram/fetchPosts.ts",
     "fetch-twitter-user": "ts-node-dev src/sentiment_modules/userTweetFetch.ts TWITTER_USERNAME=ifelsemanx TWITTER_PASSWORD=jakeadelman",

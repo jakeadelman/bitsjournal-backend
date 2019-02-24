@@ -20,13 +20,13 @@ import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
 const path = require("path");
 
 const main = async () => {
-  await createConnection();
   console.log(process.env.NODE_ENV);
   // console.log(process.env);
   if (process.env.NODE_ENV === "production") {
     console.log("loading production VARS");
     let thePath = path.join(__dirname, "/../envs/prod/.env");
     require("dotenv").config({ path: thePath });
+    await createConnection();
   } else if (process.env.NODE_ENV === "development") {
     let thePath = path.join(__dirname, "/../envs/dev/.env");
     require("dotenv").config({
@@ -36,6 +36,7 @@ const main = async () => {
     console.log(thePath);
     console.log(process.env.DB_HOST);
     console.log("loading dev VARS");
+    await createConnection();
   }
 
   const schema = await buildSchema({
