@@ -1,10 +1,10 @@
 import { Resolver, Ctx, Query, Arg } from "type-graphql";
-import { createConnection } from "typeorm";
 import { Between } from "typeorm";
 
 import { DailyTweet } from "../../entity/DailyTweet";
 import { Tweet } from "../../entity/Tweet";
 import { MyContext } from "../../types/MyContext";
+import { createConn } from "../utils/connectionOptions";
 
 const dateformat = require("dateformat");
 
@@ -18,21 +18,7 @@ export class GetDailyTweet {
     if (!ctx.req.session!.userId) {
       return undefined;
     }
-
-    const connection = await createConnection({
-      name: "tweetconni",
-      type: "postgres",
-      host: "localhost",
-      port: 5432,
-      username: "manx",
-      password: "jakeadelman",
-      database: "instagauge",
-      logging: true,
-      entities: [
-        __dirname + "/../../entity/*.*",
-        __dirname + "/../../entity/instagram/*.*"
-      ]
-    });
+    let connection = await createConn("twbyhconn");
 
     let now = new Date();
     let formatNow: number = dateformat(now, "yymmddHH");

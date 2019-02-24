@@ -1,6 +1,6 @@
 import { PreformatTweetClass } from "./tweetClass";
 import { Tweet } from "../entity/Tweet";
-import { createConnection } from "typeorm";
+import { createConn } from "src/modules/utils/connectionOptions";
 const sentiment140 = require("sentiment140");
 const chalk = require("chalk");
 // const Sentiment = require("sentiment");
@@ -124,19 +124,8 @@ export const getSentiment = (array: any[]) => {
     })
       .then((res: any) => res.json())
       .then(async (res: any) => {
-        let entLo1 = __dirname + "/../entity/*.*";
-        let entLo2 = __dirname + "/../entity/instagram/*.*";
-        const newconn = await createConnection({
-          name: "word0" + res[0].query,
-          type: "postgres",
-          host: "localhost",
-          port: 5432,
-          username: "manx",
-          password: "jakeadelman",
-          database: "instagauge",
-          logging: false,
-          entities: [entLo1, entLo2]
-        });
+        let newconn = await createConn(res[0].query);
+
         let twRepo = newconn.getRepository(Tweet);
         for (let i = 0; i < array.length; i++) {
           let r = res[i.toString()];
@@ -173,50 +162,3 @@ export const getSentiment = (array: any[]) => {
     // resolve(true);
   });
 };
-
-// export const getSentiment = (array: any[], repository: any) => {
-//   return new Promise(resolve => {
-//     let sentiment = new Sentiment();
-//     let count = 0;
-//     array.map(async (r: PreformatTweetClass) => {
-//       const tweet = new Tweet();
-//       tweet.query = r.query;
-//       tweet.tweetId = r.tweetId;
-//       tweet.timestamp = r.timestamp;
-//       tweet.currHour = r.currHour;
-//       tweet.hour = r.hour;
-//       tweet.screenName = r.screenName;
-//       tweet.isPinned = r.isPinned;
-//       tweet.isRetweet = r.isRetweet;
-//       tweet.isReplyTo = r.isReplyTo;
-//       tweet.text = r.text;
-//       tweet.userMentions = r.userMentions;
-//       tweet.hashtags = r.hashtags;
-//       tweet.images = r.images;
-//       tweet.urls = r.urls;
-//       tweet.replyCount = r.replyCount;
-//       tweet.retweetCount = r.retweetCount;
-//       tweet.favoriteCount = r.favoriteCount;
-//       let result = sentiment.analyze(r.text);
-//       tweet.score = result.score;
-//       tweet.comparative = result.comparative.toString();
-//       tweet.positiveWords = result.positive.toString();
-//       tweet.negativeWords = result.negative.toString();
-
-//       // save tweet
-//       await repository.save(tweet);
-//       count += 1;
-//       if (array.length == count) {
-//         resolve(
-//           `[` +
-//             chalk.green(`ADD`) +
-//             `]` +
-//             `: added ${array.length} tweets to database for term ` +
-//             chalk.green(`${r.query}`)
-//         );
-//       } else {
-//         return;
-//       }
-//     });
-//   });
-// };

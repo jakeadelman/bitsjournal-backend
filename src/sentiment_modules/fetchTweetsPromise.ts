@@ -1,8 +1,8 @@
 import twit from "scrape-twitter";
 import { Tweet } from "../entity/Tweet";
 import { SearchTerm } from "../entity/SearchTerm";
-import { createConnections } from "typeorm";
 import { checkTweet, format, getSentiment } from "./tweetFunctions";
+import { createConns } from "src/modules/utils/connectionOptions";
 const dateFormat = require("dateformat");
 const chalk = require("chalk");
 
@@ -13,21 +13,7 @@ const getTweets = (word: string, by: string) => {
     console.log("at beginning");
     // create stream
     const stream = new twit.TweetStream(word, by, { count: 50 });
-    let entLo1 = __dirname + "/../entity/*.*";
-    let entLo2 = __dirname + "/../entity/instagram/*.*";
-    const conns = await createConnections([
-      {
-        name: word,
-        type: "postgres",
-        host: "localhost",
-        port: 5432,
-        username: "manx",
-        password: "jakeadelman",
-        database: "instagauge",
-        logging: false,
-        entities: [entLo1, entLo2]
-      }
-    ]);
+    let conns = await createConns(word);
     const tweetRepository = conns[0].getRepository(Tweet);
 
     stream.on("error", (r: any) => {
@@ -111,32 +97,7 @@ const getTweets = (word: string, by: string) => {
 };
 
 setInterval(async function() {
-  let entLo1 = __dirname + "/../entity/*.*";
-  let entLo2 = __dirname + "/../entity/instagram/*.*";
-  const connections = await createConnections([
-    {
-      name: "defaulty2",
-      type: "postgres",
-      host: "localhost",
-      port: 5432,
-      username: "manx",
-      password: "jakeadelman",
-      database: "instagauge",
-      logging: false,
-      entities: [entLo1, entLo2]
-    },
-    {
-      name: "testy2",
-      type: "postgres",
-      host: "localhost",
-      port: 5432,
-      username: "manx",
-      password: "jakeadelman",
-      database: "instagauge",
-      logging: false,
-      entities: [entLo1, entLo2]
-    }
-  ]);
+  let connections = await createConns("fetchtws");
   console.log(
     `[` + chalk.blue(`PG`) + `]:` + chalk.green(` opened connections`)
   );

@@ -1,10 +1,10 @@
 import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
 // import bcrypt from "bcryptjs";
-import { createConnection } from "typeorm";
 import { User } from "../../entity/User";
 import { MyContext } from "../../types/MyContext";
 // import { InstaUser } from "../../entity/instagram/instaUser";
 import { SearchTerm } from "../../entity/SearchTerm";
+import { createConn } from "../utils/connectionOptions";
 
 @Resolver()
 export class AddSearchTermResolver {
@@ -13,19 +13,7 @@ export class AddSearchTermResolver {
     @Arg("searchterm") searchterm: string,
     @Ctx() ctx: MyContext
   ): Promise<null | boolean> {
-    let entLo1 = __dirname + "/../../entity/*.*";
-    let entLo2 = __dirname + "/../../entity/instagram/*.*";
-    const connection = await createConnection({
-      name: "instaconntsdfsisdfe",
-      type: "postgres",
-      host: "localhost",
-      port: 5432,
-      username: "manx",
-      password: "jakeadelman",
-      database: "instagauge",
-      logging: true,
-      entities: [entLo1, entLo2]
-    });
+    let connection = await createConn("stconn");
 
     if (!ctx.req.session!.userId) {
       connection.close();
@@ -47,8 +35,6 @@ export class AddSearchTermResolver {
     }
     console.log(user);
     console.log(searchterm);
-    // console.log(searchterm);
-    // console.log(stRepo);
     let isFalse = false;
     user.searchterms.map(us => {
       if (us.term == searchterm) {

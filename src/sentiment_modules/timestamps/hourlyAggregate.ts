@@ -1,7 +1,7 @@
-import { createConnections, createConnection } from "typeorm";
 import { SearchTerm } from "../../entity/SearchTerm";
 import { Tweet } from "../../../src/entity/Tweet";
 import { FourHourSentiment } from "../../../src/entity/sentiment/FourHourSentiment";
+import { createConns, createConn } from "src/modules/utils/connectionOptions";
 const chalk = require("chalk");
 const dateFormat = require("dateformat");
 
@@ -22,33 +22,8 @@ setInterval(async function() {
     }
   });
   if (!!yesOrNo) {
-    let entLo1 = __dirname + "/../../entity/*.*";
-    let entLo2 = __dirname + "/../../entity/instagram/*.*";
-    let entLo3 = __dirname + "/../../entity/sentiment/*.*";
-    const connections = await createConnections([
-      {
-        name: "hourly-agg-1",
-        type: "postgres",
-        host: "localhost",
-        port: 5432,
-        username: "manx",
-        password: "jakeadelman",
-        database: "instagauge",
-        logging: false,
-        entities: [entLo1, entLo2]
-      },
-      {
-        name: "hourly-agg-2",
-        type: "postgres",
-        host: "localhost",
-        port: 5432,
-        username: "manx",
-        password: "jakeadelman",
-        database: "instagauge",
-        logging: false,
-        entities: [entLo1, entLo2]
-      }
-    ]);
+    const connections = await createConns("hourly-agg");
+
     console.log(
       `[` + chalk.blue(`PG`) + `]:` + chalk.green(` opened connections`)
     );
@@ -63,17 +38,7 @@ setInterval(async function() {
           `: aggregating for term ` +
           chalk.underline.bold.green(`${term.term}`)
       );
-      const connection = await createConnection({
-        name: term.term + "the",
-        type: "postgres",
-        host: "localhost",
-        port: 5432,
-        username: "manx",
-        password: "jakeadelman",
-        database: "instagauge",
-        logging: false,
-        entities: [entLo1, entLo2, entLo3]
-      });
+      const connection = await createConn(`${term.term}-ok`);
 
       getMinusHours(begH, theHour)
         .then(async (array: any) => {
@@ -92,12 +57,6 @@ setInterval(async function() {
               let fourHourSentimentRepo = connection.getRepository(
                 FourHourSentiment
               );
-
-              // let theTerm = await searchTermRepository.findOne({
-              //   where: { term: term.term }
-              // });
-              // console.log(theTerm);
-              // if (!!theTerm) {
               let newFourHourSent = new FourHourSentiment();
               newFourHourSent.hour = parseInt(array[0]);
               newFourHourSent.sentiment = parseFloat(r);
@@ -108,14 +67,6 @@ setInterval(async function() {
                 await connections[1].close();
                 await connection.close();
               }, 7500);
-              // } else {
-              // console.log("no fucking term bro..");
-              // setTimeout(async function() {
-              //   await connections[0].close();
-              //   await connections[1].close();
-              //   await connection.close();
-              // }, 3500);
-              // }
             })
             .catch(async r => {
               connections[0].close();

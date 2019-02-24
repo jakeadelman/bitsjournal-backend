@@ -1,5 +1,6 @@
 import { Resolver, Ctx, Query, Arg } from "type-graphql";
-import { createConnection } from "typeorm";
+// import { createConnection } from "typeorm";
+import { createConn } from "../utils/connectionOptions";
 
 import { Tweet } from "../../entity/Tweet";
 import { MyContext } from "../../types/MyContext";
@@ -14,23 +15,8 @@ export class FetchTweetResolver {
     if (!ctx.req.session!.userId) {
       return undefined;
     }
-    //test commit
-    //test
-    const connection = await createConnection({
-      name: "tweetconn",
-      type: "postgres",
-      host: "localhost",
-      port: 5432,
-      username: "manx",
-      password: "jakeadelman",
-      database: "instagauge",
-      logging: true,
-      entities: [
-        __dirname + "/../../entity/*.*",
-        __dirname + "/../../entity/instagram/*.*"
-      ]
-    });
-
+    //create connection from custom function
+    let connection = await createConn("gettwconn");
     let repo = connection.getRepository(Tweet);
 
     let findings = await repo.find({ where: { query: query }, take: 20 });
