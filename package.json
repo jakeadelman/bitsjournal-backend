@@ -57,8 +57,6 @@
   "scripts": {
     "start": "ts-node-dev --respawn src/index.ts",
     "fetch-tweets": "ts-node-dev src/sentiment_modules/fetchTweetsPromise.ts",
-    "fetch-instagram": "ts-node-dev src/sentiment_modules/instagram/fetchPosts.ts",
-    "fetch-twitter-user": "ts-node-dev src/sentiment_modules/userTweetFetch.ts TWITTER_USERNAME=ifelsemanx TWITTER_PASSWORD=jakeadelman",
     "hourly-aggregate": "ts-node-dev src/sentiment_modules/timestamps/hourlyAggregate.ts",
     "fetch-google-trends": "ts-node-dev src/sentiment_modules/gTrends.ts"
   }
