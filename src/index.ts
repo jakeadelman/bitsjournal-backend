@@ -53,7 +53,7 @@ const main = async () => {
   app.use(
     cors({
       credentials: true,
-      origin: ["http://localhost:3000", "https://socialslant.io"]
+      origin: ["http://localhost:3000", "https://socialslant.io", "*"]
     })
   );
   app.use(
