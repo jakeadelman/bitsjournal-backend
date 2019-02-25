@@ -40,6 +40,8 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema,
+    introspection: true,
+    playground: true,
     formatError: formatArgumentValidationError,
     context: ({ req }: any) => ({ req })
   });
