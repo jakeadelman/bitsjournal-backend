@@ -9,8 +9,8 @@ if (process.env.NODE_ENV === "production") {
     database: "defaultdb",
     extra: { ssl: true },
     ssl: {
-      rejectUnauthorized: false,
-      ca: "/etc/letsencrypt/live/sentwit.com/cert.pem"
+      rejectUnauthorized: false
+      // ca: "/etc/letsencrypt/live/sentwit.com/cert.pem"
     },
     synchronize: true,
     logging: true,
