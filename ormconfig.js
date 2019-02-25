@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === "production") {
     extra: { ssl: true },
     ssl: {
       rejectUnauthorized: false,
-      ca: "/etc/letsencrypt/live/sentwit.com/fullchain.pem"
+      ca: "/etc/letsencrypt/live/sentwit.com/privkey.pem"
     },
     synchronize: true,
     logging: true,
