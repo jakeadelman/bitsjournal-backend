@@ -11,21 +11,7 @@ setInterval(async function() {
   now = dateFormat(now, "HHMM");
   let theHour = dateFormat(new Date(), "yymmddHH");
 
-  let theGoodHours = [
-    "0401",
-    "0801",
-    "1201",
-    "1601",
-    "1701",
-    "1801",
-    "1901",
-    "2001",
-    "2101",
-    "2201",
-    "2301",
-    "2401",
-    "0001"
-  ];
+  let theGoodHours = ["0401", "0801", "1201", "1601", "2001", "0001"];
   let yesOrNo = false;
   let begH = false;
   theGoodHours.map(hour => {
@@ -58,9 +44,12 @@ setInterval(async function() {
           console.log(r);
           connection.close();
         });
-
-      //   allTweets.map(tw => {});
     });
+
+    setTimeout(async function() {
+      await connections[0].close();
+      await connections[1].close();
+    }, 15000);
   } else {
     console.log("not 01");
   }
