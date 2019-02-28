@@ -1,7 +1,8 @@
 import { SearchTerm } from "../../entity/SearchTerm";
-import { Tweet } from "../../../src/entity/Tweet";
-import { FourHourSentiment } from "../../../src/entity/sentiment/FourHourSentiment";
+
 import { createConns, createConn } from "../../modules/utils/connectionOptions";
+import { sendToDb } from "./aggregateFunctions";
+
 const chalk = require("chalk");
 const dateFormat = require("dateformat");
 
@@ -10,7 +11,21 @@ setInterval(async function() {
   now = dateFormat(now, "HHMM");
   let theHour = dateFormat(new Date(), "yymmddHH");
 
-  let theGoodHours = ["0401", "0801", "1201", "1601", "2001", "0001"];
+  let theGoodHours = [
+    "0401",
+    "0801",
+    "1201",
+    "1601",
+    "1701",
+    "1801",
+    "1901",
+    "2001",
+    "2101",
+    "2201",
+    "2301",
+    "2401",
+    "0001"
+  ];
   let yesOrNo = false;
   let begH = false;
   theGoodHours.map(hour => {
@@ -23,65 +38,30 @@ setInterval(async function() {
   });
   if (!!yesOrNo) {
     const connections = await createConns("hourly-agg");
-
     console.log(
       `[` + chalk.blue(`PG`) + `]:` + chalk.green(` opened connections`)
     );
     let searchTermRepository = connections[0].getRepository(SearchTerm);
     let terms: any[] = await searchTermRepository.find({ select: ["term"] });
+    // let count = 0;
+    // console.log(count, terms.length);
 
     terms.map(async term => {
-      console.log(
-        `[` +
-          chalk.green(`AGG`) +
-          `]` +
-          `: aggregating for term ` +
-          chalk.underline.bold.green(`${term.term}`)
-      );
+      console.log(`aggregating for ${term.term}`);
       const connection = await createConn(`${term.term}-ok`);
-
-      getMinusHours(begH, theHour)
-        .then(async (array: any) => {
-          let twRepo = connection.getRepository(Tweet);
-          let allTweets = await twRepo.find({
-            where: [
-              { query: term.term, hour: array[0] },
-              { query: term.term, hour: array[1] },
-              { query: term.term, hour: array[2] },
-              { query: term.term, hour: array[3] }
-            ]
-          });
-          console.log(allTweets.length);
-          mapAndGetSentiment(allTweets)
-            .then(async (r: any) => {
-              let fourHourSentimentRepo = connection.getRepository(
-                FourHourSentiment
-              );
-              let newFourHourSent = new FourHourSentiment();
-              newFourHourSent.hour = parseInt(array[0]);
-              newFourHourSent.sentiment = parseFloat(r);
-              newFourHourSent.term = term.term;
-              await fourHourSentimentRepo.save(newFourHourSent);
-              setTimeout(async function() {
-                await connections[0].close();
-                await connections[1].close();
-                await connection.close();
-              }, 4500);
-            })
-            .catch(async r => {
-              connections[0].close();
-              connections[1].close();
-              connection.close();
-              console.log(r);
-            });
+      sendToDb(begH, theHour, connection, term)
+        .then(r => {
+          console.log(r);
+          connection.close();
         })
-        .catch((err: any) => console.log(err, "error getting minus hours"));
+        .catch(r => {
+          console.log(r);
+          connection.close();
+        });
 
       //   allTweets.map(tw => {});
     });
   } else {
     console.log("not 01");
-
-    return;
   }
 }, 59000);

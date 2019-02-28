@@ -1,5 +1,51 @@
-const sentToDb = (beginningHour: any, theHour: any) => {
-  return new Promise(() => {});
+import { Tweet } from "../../../src/entity/Tweet";
+import { FourHourSentiment } from "../../../src/entity/sentiment/FourHourSentiment";
+
+export const sendToDb = (
+  begH: any,
+  theHour: any,
+  connection: any,
+  term: any
+) => {
+  return new Promise(resolve => {
+    let count = 0;
+    getMinusHours(begH, theHour)
+      .then(async (array: any) => {
+        let twRepo = connection.getRepository(Tweet);
+        let allTweets = await twRepo.find({
+          where: [
+            { query: term.term, hour: array[0] },
+            { query: term.term, hour: array[1] },
+            { query: term.term, hour: array[2] },
+            { query: term.term, hour: array[3] }
+          ]
+        });
+        console.log(allTweets.length, count);
+        mapAndGetSentiment(allTweets)
+          .then(async (r: any) => {
+            let fourHourSentimentRepo = connection.getRepository(
+              FourHourSentiment
+            );
+            let newFourHourSent = new FourHourSentiment();
+            newFourHourSent.hour = parseInt(array[0]);
+            newFourHourSent.sentiment = parseFloat(r);
+            newFourHourSent.term = term.term;
+            await fourHourSentimentRepo.save(newFourHourSent);
+            count += 1;
+            if (count == allTweets.length) {
+              resolve(true);
+            }
+          })
+          .catch(async r => {
+            console.log(r);
+            count += 1;
+            if (count == allTweets.length) {
+              resolve(true);
+            }
+          });
+      })
+      .catch((err: any) => console.log(err, "error getting minus hours"));
+  });
 };
 
 const getMinusHours = (begH: boolean, theHour: string) => {

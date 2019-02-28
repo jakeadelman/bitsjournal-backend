@@ -12,7 +12,7 @@ export const createConn = (name: string): Promise<Connection> => {
         password: "i3px3pqqw3h11uh1",
         database: "defaultdb",
         ssl: { rejectUnauthorized: false },
-        logging: true,
+        logging: false,
         entities: [
           __dirname + "/../../entity/*.*",
           __dirname + "/../../entity/instagram/*.*",
@@ -30,7 +30,7 @@ export const createConn = (name: string): Promise<Connection> => {
         username: "manx",
         password: "jakeadelman",
         database: "instagauge",
-        logging: true,
+        logging: false,
         entities: [
           __dirname + "/../../entity/*.*",
           __dirname + "/../../entity/instagram/*.*",
@@ -57,7 +57,7 @@ export const createConns = (name: string): Promise<Connection[]> => {
           password: "i3px3pqqw3h11uh1",
           database: "defaultdb",
           ssl: { rejectUnauthorized: false },
-          logging: true,
+          logging: false,
           entities: [
             __dirname + "/../../entity/*.*",
             __dirname + "/../../entity/instagram/*.*",
@@ -73,7 +73,7 @@ export const createConns = (name: string): Promise<Connection[]> => {
           password: "i3px3pqqw3h11uh1",
           database: "defaultdb",
           ssl: { rejectUnauthorized: false },
-          logging: true,
+          logging: false,
           entities: [
             __dirname + "/../../entity/*.*",
             __dirname + "/../../entity/instagram/*.*",
@@ -93,7 +93,7 @@ export const createConns = (name: string): Promise<Connection[]> => {
           username: "manx",
           password: "jakeadelman",
           database: "instagauge",
-          logging: true,
+          logging: false,
           entities: [
             __dirname + "/../../entity/*.*",
             __dirname + "/../../entity/instagram/*.*",
@@ -108,7 +108,7 @@ export const createConns = (name: string): Promise<Connection[]> => {
           username: "manx",
           password: "jakeadelman",
           database: "instagauge",
-          logging: true,
+          logging: false,
           entities: [
             __dirname + "/../../entity/*.*",
             __dirname + "/../../entity/instagram/*.*",

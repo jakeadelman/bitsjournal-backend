@@ -10,7 +10,6 @@ const getTweets = (word: string, by: string) => {
   return new Promise(async (resolve, reject) => {
     let arr: any[] = [];
 
-    console.log("at beginning");
     // create stream
     const stream = new twit.TweetStream(word, by, { count: 50 });
     let conns = await createConns(word);
@@ -69,7 +68,8 @@ const getTweets = (word: string, by: string) => {
     stream.on("end", async () => {
       console.log(`found ${arr.length} tweets for ${word}`);
       if (arr.length == 0) {
-        conns[0].close();
+        await conns[0].close();
+        await conns[1].close();
         reject("no new tweets");
       } else {
         checkTweet(arr, tweetRepository)
@@ -78,17 +78,20 @@ const getTweets = (word: string, by: string) => {
           })
           .then((r: any[]) => {
             getSentiment(r)
-              .then(r => {
-                conns[0].close();
+              .then(async r => {
+                await conns[0].close();
+                await conns[1].close();
                 resolve(r);
               })
-              .catch(err => {
-                conns[0].close();
+              .catch(async err => {
+                await conns[0].close();
+                await conns[1].close();
                 reject(new Error(err));
               });
           })
-          .catch((r: any) => {
-            conns[0].close();
+          .catch(async (r: any) => {
+            await conns[0].close();
+            await conns[1].close();
             reject(chalk.red(`>> ${r}`));
           });
       }
