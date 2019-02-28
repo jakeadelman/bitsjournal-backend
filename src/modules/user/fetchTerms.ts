@@ -12,7 +12,7 @@ export class FetchTermResolver {
     if (!ctx.req.session!.userId) {
       return undefined;
     }
-    //test commit
+
     //test
     const connection = await createConnection({
       name: "tweetconnew",

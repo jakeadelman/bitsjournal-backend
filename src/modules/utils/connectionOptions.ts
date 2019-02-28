@@ -19,6 +19,7 @@ export const createConn = (name: string): Promise<Connection> => {
           __dirname + "/../../entity/sentiment/*.*"
         ]
       });
+      console.log(`created connection ${name}`);
       resolve(connection);
     } else if (process.env.NODE_ENV! === "development") {
       const connection: Connection = await createConnection({
@@ -36,6 +37,7 @@ export const createConn = (name: string): Promise<Connection> => {
           __dirname + "/../../entity/sentiment/*.*"
         ]
       });
+      console.log(`created connection ${name}`);
       resolve(connection);
     } else {
       reject(new Error("env not known"));
@@ -79,6 +81,7 @@ export const createConns = (name: string): Promise<Connection[]> => {
           ]
         }
       ]);
+      console.log(`created connections ${name}1 and ${name}2`);
       resolve(connections);
     } else if (process.env.NODE_ENV! === "development") {
       const connections: Connection[] = await createConnections([
@@ -113,6 +116,7 @@ export const createConns = (name: string): Promise<Connection[]> => {
           ]
         }
       ]);
+      console.log(`created connections ${name}1 and ${name}2`);
       resolve(connections);
     } else {
       reject(new Error("env not known"));

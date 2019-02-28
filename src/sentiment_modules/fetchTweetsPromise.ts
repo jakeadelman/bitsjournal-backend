@@ -2,7 +2,7 @@ import twit from "scrape-twitter";
 import { Tweet } from "../entity/Tweet";
 import { SearchTerm } from "../entity/SearchTerm";
 import { checkTweet, format, getSentiment } from "./tweetFunctions";
-import { createConns } from "src/modules/utils/connectionOptions";
+import { createConns } from "../modules/utils/connectionOptions";
 const dateFormat = require("dateformat");
 const chalk = require("chalk");
 

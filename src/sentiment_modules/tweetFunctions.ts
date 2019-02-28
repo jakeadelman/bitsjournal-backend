@@ -1,6 +1,6 @@
 import { PreformatTweetClass } from "./tweetClass";
 import { Tweet } from "../entity/Tweet";
-import { createConn } from "src/modules/utils/connectionOptions";
+import { createConn } from "../modules/utils/connectionOptions";
 const sentiment140 = require("sentiment140");
 const chalk = require("chalk");
 // const Sentiment = require("sentiment");

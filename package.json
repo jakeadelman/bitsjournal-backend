@@ -34,6 +34,7 @@
     "scrape-twitter": "^0.11.1",
     "sentiment": "^5.0.1",
     "sentiment140": "^1.2.0",
+    "stripe": "^6.25.1",
     "type-graphql": "^0.16.0",
     "typeorm": "^0.2.12",
     "typescript": "^3.2.4",
