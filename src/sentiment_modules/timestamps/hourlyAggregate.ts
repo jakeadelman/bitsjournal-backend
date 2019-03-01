@@ -11,19 +11,7 @@ setInterval(async function() {
   now = dateFormat(now, "HHMM");
   let theHour = dateFormat(new Date(), "yymmddHH");
 
-  let theGoodHours = [
-    "0401",
-    "0801",
-    "1201",
-    "1601",
-    "1901",
-    "2401",
-    "0101",
-    "0201",
-    "0301",
-    "2001",
-    "0001"
-  ];
+  let theGoodHours = ["0401", "0801", "1201", "1601", "2001", "0001"];
   let yesOrNo = false;
   let begH = false;
   theGoodHours.map(hour => {
