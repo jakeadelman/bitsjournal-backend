@@ -11,7 +11,17 @@ setInterval(async function() {
   now = dateFormat(now, "HHMM");
   let theHour = dateFormat(new Date(), "yymmddHH");
 
-  let theGoodHours = ["0401", "0801", "1201", "1601", "2001", "0001"];
+  let theGoodHours = [
+    "0401",
+    "0801",
+    "1201",
+    "1601",
+    "1915",
+    "1916",
+    "1917",
+    "2001",
+    "0001"
+  ];
   let yesOrNo = false;
   let begH = false;
   theGoodHours.map(hour => {
@@ -53,4 +63,4 @@ setInterval(async function() {
   } else {
     console.log("not 01");
   }
-}, 59000);
+}, 24000);

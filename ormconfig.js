@@ -3,10 +3,10 @@ if (process.env.NODE_ENV === "production") {
     name: "default",
     type: "postgres",
     host: "tradrr-psql-do-user-3307088-0.db.ondigitalocean.com",
-    port: 25060,
+    port: 25061,
     username: "doadmin",
     password: "i3px3pqqw3h11uh1",
-    database: "defaultdb",
+    database: "newpool",
     extra: { ssl: true },
     ssl: {
       rejectUnauthorized: false

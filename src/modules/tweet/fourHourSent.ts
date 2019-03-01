@@ -19,7 +19,11 @@ export class FourHourSentResolver {
     let connection = await createConn("senticonn");
     let repo = connection.getRepository(FourHourSentiment);
 
-    let findings = await repo.find({ where: { term: term }, take: 3 });
+    let findings = await repo.find({
+      where: { term: term },
+      take: 7,
+      order: { id: "DESC" }
+    });
     connection.close();
 
     return findings;

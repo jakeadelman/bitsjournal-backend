@@ -59,6 +59,7 @@
     "start": "ts-node-dev --respawn src/index.ts",
     "fetch-tweets": "ts-node-dev src/sentiment_modules/fetchTweetsPromise.ts",
     "hourly-aggregate": "ts-node-dev src/sentiment_modules/timestamps/hourlyAggregate.ts",
-    "fetch-google-trends": "ts-node-dev src/sentiment_modules/gTrends.ts"
+    "fetch-google-trends": "ts-node-dev src/sentiment_modules/gTrends.ts",
+    "test-create-hours": "ts-node-dev src/sentiment_modules/timestamps/test-createHours.ts"
   }
 }
