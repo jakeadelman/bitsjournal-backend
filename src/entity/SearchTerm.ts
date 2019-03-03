@@ -2,11 +2,11 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
+  ManyToOne,
   JoinTable
 } from "typeorm";
 import { ObjectType, Field, ID } from "type-graphql";
-import { User } from "./User";
+import { Currency } from "./Currency";
 
 @ObjectType()
 @Entity("searchterm")
@@ -19,7 +19,7 @@ export class SearchTerm {
   @Column()
   term: string;
 
-  @ManyToMany(() => User, user => user.searchterms)
+  @ManyToOne(() => Currency, currency => currency.terms)
   @JoinTable()
-  users: User[];
+  currency: Currency;
 }

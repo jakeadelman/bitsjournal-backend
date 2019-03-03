@@ -1,17 +1,20 @@
 import twit from "scrape-twitter";
 import { Tweet } from "../entity/Tweet";
 import { SearchTerm } from "../entity/SearchTerm";
+import { Currency } from "../entity/Currency";
 import { checkTweet, format, getSentiment } from "./tweetFunctions";
 import { createConns } from "../modules/utils/connectionOptions";
+
+// const schedule = require("node-schedule");
 const dateFormat = require("dateformat");
 const chalk = require("chalk");
 
-const getTweets = (word: string, by: string) => {
+const getTweets = (word: string, by: string, searchTermRepository: any) => {
   return new Promise(async (resolve, reject) => {
     let arr: any[] = [];
-
+    let st = word + " lang:en";
     // create stream
-    const stream = new twit.TweetStream(word, by, { count: 50 });
+    const stream = new twit.TweetStream(st, by, { count: 50 });
     let conns = await createConns(word);
     const tweetRepository = conns[0].getRepository(Tweet);
 
@@ -72,11 +75,34 @@ const getTweets = (word: string, by: string) => {
         await conns[1].close();
         reject("no new tweets");
       } else {
-        checkTweet(arr, tweetRepository)
-          .then((r: any) => {
+        let theTerm = await searchTermRepository.findOne({
+          where: { term: word },
+          relations: ["currency"]
+        });
+        let currRepo = await conns[0].getRepository(Currency);
+        let curr = await currRepo.findOne({
+          where: { name: theTerm.currency.name },
+          relations: ["terms"]
+        });
+        let terms: any[] = [];
+        for (let r = 0; r < curr!.terms.length; r++) {
+          terms.push(curr!.terms[r].term);
+        }
+        if (curr && curr.additional_terms[0]) {
+          for (let i = 0; i < curr.additional_terms.length; i++) {
+            terms.push(curr.additional_terms[i]);
+          }
+        }
+        checkTweet(arr, tweetRepository, terms)
+          .then(async (r: any) => {
+            // let ans = await checkNer(r);
+            // if (typeof ans == "boolean") {
+            //   reject("no new tweets for " + arr[0].query);
+            // }
+            // console.log(ans);
             return r;
           })
-          .then((r: any[]) => {
+          .then((r: any) => {
             getSentiment(r)
               .then(async r => {
                 await conns[0].close();
@@ -100,6 +126,7 @@ const getTweets = (word: string, by: string) => {
 };
 
 setInterval(async function() {
+  // schedule.scheduleJob("09 * * * * *", async function() {
   let connections = await createConns("fetchtws");
   console.log(
     `[` + chalk.blue(`PG`) + `]:` + chalk.green(` opened connections`)
@@ -116,7 +143,7 @@ setInterval(async function() {
         `: fetching tweets for term ` +
         chalk.underline.bold.green(`${term.term}`)
     );
-    getTweets(term.term, "top")
+    getTweets(term.term, "latest", searchTermRepository)
       .then((r: any) => {
         console.log(r);
         count += 1;
@@ -140,4 +167,5 @@ setInterval(async function() {
         }
       });
   });
-}, 250000);
+}, 60000);
+// });

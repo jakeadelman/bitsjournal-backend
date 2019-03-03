@@ -28,6 +28,7 @@
     "ioredis": "^4.5.1",
     "jsonwebtoken": "^8.4.0",
     "node-fetch": "^2.3.0",
+    "node-schedule": "^1.3.2",
     "nodemailer": "^5.1.1",
     "pg": "^7.8.0",
     "reflect-metadata": "^0.1.13",
@@ -58,7 +59,8 @@
   "scripts": {
     "start": "ts-node-dev --respawn src/index.ts",
     "fetch-tweets": "ts-node-dev src/sentiment_modules/fetchTweetsPromise.ts",
-    "hourly-aggregate": "ts-node-dev src/sentiment_modules/timestamps/hourlyAggregate.ts",
+    "fetch-tweet-list": "ts-node-dev src/sentiment_modules/twitter/fetchTweets.ts",
+    "hourly-agg": "ts-node-dev src/sentiment_modules/timestamps/hourlyAgg.ts",
     "fetch-google-trends": "ts-node-dev src/sentiment_modules/gTrends.ts",
     "test-create-hours": "ts-node-dev src/sentiment_modules/timestamps/test-createHours.ts"
   }

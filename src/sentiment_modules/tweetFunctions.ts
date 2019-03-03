@@ -1,9 +1,7 @@
-import { PreformatTweetClass } from "./tweetClass";
+// import { PreformatTweetClass } from "./tweetClass";
 import { Tweet } from "../entity/Tweet";
 import { createConn } from "../modules/utils/connectionOptions";
-const sentiment140 = require("sentiment140");
 const chalk = require("chalk");
-// const Sentiment = require("sentiment");
 const fetch = require("node-fetch");
 
 export const format = (subject: string) => {
@@ -17,16 +15,18 @@ export const format = (subject: string) => {
   }
 };
 
-export const checkTweet = (array: any[], repository: any) => {
+export const checkTweet = (
+  array: any[],
+  repository: any,
+  theTerms: string[]
+) => {
   return new Promise((resolve, reject) => {
     console.log("in check tweet");
     let newRay: any[] = [];
     let count: number = 0;
     array.map(async (r: any) => {
-      let id = await repository.findOne({
-        tweetId: r.tweetId
-      });
-      if (typeof id == "undefined") {
+      let isNotSpam = await checkSpam(r, repository, theTerms);
+      if (isNotSpam == true) {
         // console.log("was undefined");
         newRay.push(r);
         count += 1;
@@ -49,62 +49,6 @@ export const checkTweet = (array: any[], repository: any) => {
         } else if (count == array.length && !newRay[0]) {
           reject(`no new tweets for term ` + chalk.green(`${r.query}`));
         }
-      }
-    });
-  });
-};
-
-export const fetchSentiment = (
-  array: any[],
-  repository: any,
-  email: string
-) => {
-  return new Promise((resolve, reject) => {
-    console.log("in sentiment");
-    let senti = new sentiment140({
-      auth: email
-    });
-    let dat = { data: array };
-    senti.sentiment(dat, async (error: any, result: any) => {
-      if (result) {
-        let reso = JSON.stringify(result);
-        let resi = JSON.parse(reso);
-        let count = 0;
-        resi.map(async (r: PreformatTweetClass) => {
-          const tweet = new Tweet();
-          tweet.query = r.query;
-          tweet.tweetId = r.tweetId;
-          tweet.timestamp = r.timestamp;
-          tweet.currHour = r.currHour;
-          tweet.hour = r.hour;
-          tweet.screenName = r.screenName;
-          tweet.isPinned = r.isPinned;
-          tweet.isRetweet = r.isRetweet;
-          tweet.isReplyTo = r.isReplyTo;
-          tweet.text = r.text;
-          tweet.userMentions = r.userMentions;
-          tweet.hashtags = r.hashtags;
-          tweet.images = r.images;
-          tweet.urls = r.urls;
-          tweet.replyCount = r.replyCount;
-          tweet.retweetCount = r.retweetCount;
-          tweet.favoriteCount = r.favoriteCount;
-
-          // save tweet
-          await repository.save(tweet);
-          count += 1;
-          if (array.length == count) {
-            resolve(
-              `[` +
-                chalk.green(`ADD`) +
-                `]` +
-                `: added ${array.length} tweets to database for` +
-                chalk.underline.green(`${r.query}`)
-            );
-          }
-        });
-      } else if (error) {
-        reject(new Error(`error retreiving sentiment data`));
       }
     });
   });
@@ -160,5 +104,116 @@ export const getSentiment = (array: any[]) => {
 
     // console.log(repository);
     // resolve(true);
+  });
+};
+
+export const checkNer = (array: any[]) => {
+  return new Promise<any[] | boolean>(resolve => {
+    let dict = {};
+    dict["data"] = array;
+    // let count = 0
+    console.log("about to perform check2");
+
+    fetch("http://127.0.0.1:5001/post", {
+      method: "post",
+      body: JSON.stringify(dict),
+      headers: { "Content-Type": "application/json" }
+    })
+      .then((res: any) => res.json())
+      .then(async (res: any) => {
+        console.log(res);
+        let i = 0;
+        console.log(typeof res[i.toString()]);
+        if (typeof res[i.toString()] == "undefined") {
+          resolve(false);
+        }
+        let fullRay: any[] = [];
+        let thisOne: any;
+        let done = false;
+        while (done == false) {
+          if (typeof res[i.toString()] == "undefined") {
+            console.log(fullRay);
+            resolve(fullRay);
+            done = true;
+          } else {
+            thisOne = res[i.toString()];
+            fullRay.push(thisOne);
+          }
+        }
+
+        // for (let r = 0; r < res.length; r++) {
+        //   thisOne = res[r.toString()];
+        //   fullRay.push(thisOne);
+        //   if (r == res.length - 1) {
+        //     resolve(fullRay);
+        //   }
+        // }
+        // let newconn = await createConn(res[0].query);
+        // resolve(res);
+
+        // for (let i = 0; i < array.length; i++) {
+        //   let r = res[i.toString()];
+        //   console.log(r)
+
+        //   // console.log(i + 1, array.length);
+        //   if (i + 1 == array.length) {
+        //     console.log(`saved ${array.length} new tweets`);
+        //     await newconn.close();
+        //     resolve(true);
+        //   }
+        // }
+      });
+  });
+};
+
+const checkSpam = (tweet: any, repository: any, theTerms: any) => {
+  return new Promise(async resolve => {
+    let id = await repository.findOne({
+      tweetId: tweet.tweetId
+    });
+
+    if (typeof id !== "undefined") {
+      resolve(false);
+    }
+
+    if (tweet.text.includes("https://") && tweet.favoriteCount < 2) {
+      resolve(false);
+    }
+
+    if (tweet.text.includes("http://") && tweet.favoriteCount < 2) {
+      resolve(false);
+    }
+
+    if (tweet.text.includes(".com") && tweet.favoriteCount < 2) {
+      resolve(false);
+    }
+
+    if (tweet.text.includes(".ly") && tweet.favoriteCount < 2) {
+      resolve(false);
+    }
+
+    let includes = await checkIncludes(tweet.text, theTerms);
+    if (includes == false) {
+      resolve(false);
+    } else {
+      resolve(true);
+    }
+
+    // resolve(true);
+  });
+};
+
+const checkIncludes = (checkString, terms) => {
+  return new Promise(resolve => {
+    let string = checkString;
+    for (let i = 0; i < terms.length; i++) {
+      let ans = string.search(new RegExp(terms[i], "i"));
+      if (ans !== -1) {
+        resolve(true);
+      }
+      if (i == terms.length - 1) {
+        resolve(false);
+      }
+    }
   });
 };

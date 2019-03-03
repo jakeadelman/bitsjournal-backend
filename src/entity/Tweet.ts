@@ -13,7 +13,7 @@ export class Tweet {
   query: string;
 
   @Field()
-  @Column()
+  @Column({ unique: true })
   tweetId: string;
 
   @Field()
@@ -79,20 +79,4 @@ export class Tweet {
   @Field()
   @Column()
   polarity: number;
-
-  //   @Field()
-  //   @Column()
-  //   score: number;
-
-  //   @Field()
-  //   @Column()
-  //   comparative: string;
-
-  //   @Field()
-  //   @Column()
-  //   positiveWords: string;
-
-  //   @Field()
-  //   @Column()
-  //   negativeWords: string;
 }

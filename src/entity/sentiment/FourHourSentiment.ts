@@ -19,4 +19,8 @@ export class FourHourSentiment {
   @Field()
   @Column()
   term: string;
+
+  @Field()
+  @Column()
+  num_tweets: number;
 }

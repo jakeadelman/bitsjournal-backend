@@ -1,6 +1,6 @@
 import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
 // import bcrypt from "bcryptjs";
-import { User } from "../../entity/User";
+import { Currency } from "../../entity/Currency";
 import { MyContext } from "../../types/MyContext";
 // import { InstaUser } from "../../entity/instagram/instaUser";
 import { SearchTerm } from "../../entity/SearchTerm";
@@ -11,6 +11,7 @@ export class AddSearchTermResolver {
   @Mutation(() => Boolean, { nullable: true })
   async addSearchTerm(
     @Arg("searchterm") searchterm: string,
+    @Arg("currencyName") currencyName: string,
     @Ctx() ctx: MyContext
   ): Promise<null | boolean> {
     let connection = await createConn("stconn");
@@ -21,54 +22,23 @@ export class AddSearchTermResolver {
       return null;
     }
 
-    let theUser = ctx.req.session!.userId;
+    // let theUser = ctx.req.session!.userId;
 
-    let userRepo = connection.getRepository(User);
-    let stRepo = connection.getRepository(SearchTerm);
-    let user = await userRepo.findOne({
-      where: { id: theUser },
-      relations: ["searchterms"]
+    let currencyRepo = await connection.getRepository(Currency);
+    let stRepo = await connection.getRepository(SearchTerm);
+    let currency = await currencyRepo.findOne({
+      where: { name: currencyName }
     });
 
-    if (user == undefined) {
-      return false;
-    }
-    console.log(user);
-    console.log(searchterm);
-    let isFalse = false;
-    user.searchterms.map(us => {
-      if (us.term == searchterm) {
-        console.log("THIS IS THE FUCKING SAME");
-        isFalse = true;
-      } else {
-        return;
-      }
-    });
+    if (!!currency) {
+      let newSearchTerm = new SearchTerm();
+      newSearchTerm.currency = currency!;
+      newSearchTerm.term = searchterm;
+      await stRepo.save(newSearchTerm);
 
-    if (!!isFalse) {
+      //close connection
       connection.close();
-      return false;
     }
-
-    //check if searchterm already exists
-    let st = await stRepo.findOne({ where: { term: searchterm } });
-    if (typeof st !== "undefined") {
-      console.log("already exists.. adding to user");
-      user.searchterms.push(st);
-      await userRepo.save(user);
-      connection.close();
-      return true;
-    }
-
-    let newSearchTerm = await new SearchTerm();
-    console.log(newSearchTerm);
-    newSearchTerm.term = searchterm;
-    newSearchTerm.users = [user];
-    await stRepo.save(newSearchTerm);
-
-    // console.log(searchterm);
-    connection.close();
-
     return true;
   }
 }
