@@ -92,7 +92,9 @@ export const getSentiment = (array: any[]) => {
           tweet.retweetCount = r.retweetCount;
           tweet.favoriteCount = r.favoriteCount;
           tweet.polarity = r.polarity;
-          await twRepo.save(tweet);
+          await twRepo
+            .save(tweet)
+            .catch(() => console.log("tweet may have already been added "));
           // console.log(i + 1, array.length);
           if (i + 1 == array.length) {
             console.log(`saved ${array.length} new tweets`);
