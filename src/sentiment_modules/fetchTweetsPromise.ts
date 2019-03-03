@@ -167,5 +167,5 @@ setInterval(async function() {
         }
       });
   });
-}, 300000);
+}, 350000);
 // });
