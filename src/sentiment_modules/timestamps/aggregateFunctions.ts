@@ -52,7 +52,7 @@ export const sendToDb = (
 const getMinusH = (begH: boolean, theHour: string) => {
   return new Promise(resolve => {
     console.log(`starting hour is ${theHour} and is ${begH}`);
-    let utcHour = dateFormat(new Date(), "yymmddHH");
+    let utcHour = dateFormat(new Date(), "UTC:yymmddHH");
     console.log(utcHour);
     resolve(parseInt(utcHour));
   });
