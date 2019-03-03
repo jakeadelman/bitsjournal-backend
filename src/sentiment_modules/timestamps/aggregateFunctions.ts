@@ -14,7 +14,7 @@ export const sendToDb = (
         console.log(endHour);
         let twRepo = connection.getRepository(Tweet);
         let allTweets = await twRepo.find({
-          where: [{ query: term.term, hour: endHour }]
+          where: [{ query: term.term, hour: endHour.toString() }]
         });
         mapAndGetSentiment(allTweets)
           .then(async (r: any) => {
