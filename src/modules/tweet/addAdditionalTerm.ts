@@ -21,8 +21,15 @@ export class AddAdditionalTermResolver {
 
     let currencyRepo = await connection.getRepository(Currency);
     let newCurrency = await currencyRepo.findOne({ where: { name: currency } });
-    if (!!newCurrency) {
+    if (!!newCurrency && newCurrency.additional_terms[0]) {
       newCurrency.additional_terms.push(newTerm);
+      await currencyRepo.save(newCurrency);
+      connection.close();
+      return true;
+    } else if (!!newCurrency && !newCurrency.additional_terms) {
+      let newRay: string[] = [];
+      newRay.push(newTerm);
+      newCurrency.additional_terms = newRay;
       await currencyRepo.save(newCurrency);
       connection.close();
       return true;
