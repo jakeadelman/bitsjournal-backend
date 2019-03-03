@@ -8,15 +8,7 @@ const schedule = require("node-schedule");
 
 // schedule job to run on first minute of every hour
 schedule.scheduleJob("01 01 * * * *", async function() {
-  // find out if hour is first hour of day
-  // if true, we need to subtract more to get correct hour for aggregations
-  let begH = false;
-  let now = new Date();
-  now = dateFormat(now, "HH");
   let theHour = dateFormat(new Date(), "yymmddHH");
-  if (now.toString() == "00") {
-    begH = true;
-  }
 
   //create connections
   let connections = await createConns("hourly-agg");
@@ -32,7 +24,7 @@ schedule.scheduleJob("01 01 * * * *", async function() {
   terms.map(async term => {
     console.log(`aggregating for ${term.term}`);
     const connection = await createConn(`${term.term}-ok`);
-    sendToDb(begH, theHour, connection, term)
+    sendToDb(theHour, connection, term)
       .then(r => {
         console.log(r);
         connection.close();

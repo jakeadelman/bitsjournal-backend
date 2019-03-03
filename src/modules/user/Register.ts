@@ -3,8 +3,8 @@ import bcrypt from "bcryptjs";
 import { User } from "../../entity/User";
 import { RegisterInput } from "./register/RegisterInput";
 import { isAuth } from "../middleware/isAuth";
-// import { sendEmail } from "../utils/sendEmail";
-// import { createConfirmationUrl } from "../utils/createConfirmationUrl";
+import { sendEmail } from "../utils/sendEmail";
+import { createConfirmationUrl } from "../utils/createConfirmationUrl";
 
 @Resolver()
 export class RegisterResolver {
@@ -29,9 +29,9 @@ export class RegisterResolver {
       email,
       password: hashedPassword
     }).save();
-    // console.log("about to send email");
-    // await sendEmail(email, await createConfirmationUrl(user.id));
-    // console.log("sent email");
+    console.log("about to send email");
+    await sendEmail(email, await createConfirmationUrl(user.id));
+    console.log("sent email");
 
     return user;
   }

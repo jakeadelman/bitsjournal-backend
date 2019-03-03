@@ -2,20 +2,18 @@ import { Tweet } from "../../../src/entity/Tweet";
 import { HourSentiment } from "../../../src/entity/sentiment/HourSentiment";
 const dateFormat = require("dateformat");
 
-export const sendToDb = (
-  begH: any,
-  theHour: any,
-  connection: any,
-  term: any
-) => {
+export const sendToDb = (theHour: any, connection: any, term: any) => {
   return new Promise(resolve => {
-    getMinusH(begH, theHour)
-      .then(async (endHour: any) => {
+    getMinusH(theHour)
+      .then(async (endHour: string) => {
         console.log(endHour);
         let twRepo = connection.getRepository(Tweet);
         let allTweets = await twRepo.find({
-          where: [{ query: term.term, hour: endHour.toString() }]
+          where: [{ query: term.term, hour: endHour }]
         });
+        console.log(
+          `found ${allTweets.length} tweets for ${term.term} from ${endHour}`
+        );
         mapAndGetSentiment(allTweets)
           .then(async (r: any) => {
             let hourSentimentRepo = await connection.getRepository(
@@ -26,7 +24,12 @@ export const sendToDb = (
             newHourSentiment.sentiment = parseFloat(r);
             newHourSentiment.term = term.term;
             newHourSentiment.num_tweets = parseInt(allTweets.length);
-            await hourSentimentRepo.save(newHourSentiment);
+            await hourSentimentRepo
+              .save(newHourSentiment)
+              .then(() => console.log("saved correctly"))
+              .catch(() => {
+                console.log("sentiment not saved");
+              });
             let res = await connection
               .createQueryBuilder()
               .delete()
@@ -49,39 +52,24 @@ export const sendToDb = (
   });
 };
 
-const getMinusH = (begH: boolean, theHour: string) => {
-  return new Promise(resolve => {
-    console.log(`starting hour is ${theHour} and is ${begH}`);
+const getMinusH = (theHour: string) => {
+  return new Promise<string>(resolve => {
+    console.log(`starting hour is ${theHour}`);
     let utcHour = dateFormat(new Date(), "UTC:yymmddHH");
-    console.log(utcHour);
-    resolve(parseInt(utcHour));
+    let utcHourString = utcHour.toString();
+    let endTwoHours = utcHourString[6] + utcHourString[7];
+    let newUtc;
+    if (endTwoHours == "00") {
+      newUtc = parseInt(utcHour) - 77;
+      console.log(`ending hour is ${newUtc}`);
+      resolve(newUtc.toString());
+    } else {
+      newUtc = parseInt(utcHour) - 1;
+      console.log(`ending hour is ${newUtc}`);
+      resolve(newUtc.toString());
+    }
   });
 };
-
-// const getMinusHours = (begH: boolean, theHour: string) => {
-//   return new Promise(resolve => {
-//     let theHourMinus1: string;
-//     let theHourMinus2: string;
-//     let theHourMinus3: string;
-//     let theHourMinus4: string;
-
-//     if (!begH) {
-//       theHourMinus1 = (parseInt(theHour) - 1).toString();
-//       theHourMinus2 = (parseInt(theHour) - 2).toString();
-//       theHourMinus3 = (parseInt(theHour) - 3).toString();
-//       theHourMinus4 = (parseInt(theHour) - 4).toString();
-//       console.log("minus hours are " + [theHourMinus1, theHourMinus4]);
-//       resolve([theHourMinus1, theHourMinus2, theHourMinus3, theHourMinus4]);
-//     } else if (!!begH) {
-//       theHourMinus1 = (parseInt(theHour) - 76).toString();
-//       theHourMinus2 = (parseInt(theHour) - 77).toString();
-//       theHourMinus3 = (parseInt(theHour) - 77).toString();
-//       theHourMinus4 = (parseInt(theHour) - 78).toString();
-//       console.log("minus hours are " + [theHourMinus1, theHourMinus4]);
-//       resolve([theHourMinus1, theHourMinus2, theHourMinus3, theHourMinus4]);
-//     }
-//   });
-// };
 
 const mapAndGetSentiment = (allTweets: any[]) => {
   return new Promise(resolve => {
