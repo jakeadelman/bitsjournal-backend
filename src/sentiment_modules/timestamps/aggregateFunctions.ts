@@ -1,5 +1,6 @@
 import { Tweet } from "../../../src/entity/Tweet";
 import { HourSentiment } from "../../../src/entity/sentiment/HourSentiment";
+const dateFormat = require("dateformat");
 
 export const sendToDb = (
   begH: any,
@@ -51,19 +52,9 @@ export const sendToDb = (
 const getMinusH = (begH: boolean, theHour: string) => {
   return new Promise(resolve => {
     console.log(`starting hour is ${theHour} and is ${begH}`);
-    let utcHour;
-    let intHour = parseInt(theHour);
-    let endNum = theHour[7];
-    let secondEndNum = theHour[6];
-    let concatStr = secondEndNum + endNum;
-    let intEndHour = parseInt(concatStr);
-    if (intEndHour > 20) {
-      utcHour = intHour + 100 - 20;
-      resolve(utcHour);
-    } else {
-      utcHour = intHour + 4;
-      resolve(utcHour);
-    }
+    let utcHour = dateFormat(new Date(), "yymmddHH");
+    console.log(utcHour);
+    resolve(parseInt(utcHour));
   });
 };
 
