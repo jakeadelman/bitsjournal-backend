@@ -166,7 +166,7 @@ export const checkNer = (array: any[]) => {
   });
 };
 
-const checkSpam = (tweet: any, repository: any, theTerms: any) => {
+const checkSpam = (tweet: any, repository: any, theTerms: string[]) => {
   return new Promise(async resolve => {
     let id = await repository.findOne({
       tweetId: tweet.tweetId

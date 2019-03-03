@@ -88,7 +88,7 @@ const getTweets = (word: string, by: string, searchTermRepository: any) => {
         for (let r = 0; r < curr!.terms.length; r++) {
           terms.push(curr!.terms[r].term);
         }
-        if (curr && curr.additional_terms[0]) {
+        if (curr && curr.additional_terms) {
           for (let i = 0; i < curr.additional_terms.length; i++) {
             terms.push(curr.additional_terms[i]);
           }
