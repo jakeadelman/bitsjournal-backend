@@ -7,6 +7,7 @@ import { AddSearchTermResolver } from "./modules/tweet/addSearchTerm";
 import { GetDailyTweet } from "./modules/tweet/tweetByHour";
 import { ConfirmCardResolver } from "./modules/user/ConfirmCard";
 import { FourHourSentResolver } from "./modules/tweet/fourHourSent";
+import { HourSentimentResolver } from "./modules/tweet/hourlySentiment";
 import { AddCurrencyResolver } from "./modules/tweet/addCurrency";
 import { AddAdditionalTermResolver } from "./modules/tweet/addAdditionalTerm";
 
@@ -21,5 +22,6 @@ export const resolverArray = [
   ConfirmCardResolver,
   FourHourSentResolver,
   AddCurrencyResolver,
-  AddAdditionalTermResolver
+  AddAdditionalTermResolver,
+  HourSentimentResolver
 ];
