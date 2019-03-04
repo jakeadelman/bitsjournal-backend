@@ -59,7 +59,8 @@ export class HourSentimentResolver {
         } else {
           newSent.sentiment[r] =
             newSent.sentiment[r] + parseFloat(thisSenti[r].sentiment);
-          newSent.num_tweets[r] = newSent.num_tweets[r] + thisSenti.num_tweets;
+          newSent.num_tweets[r] =
+            newSent.num_tweets[r] + thisSenti[r].num_tweets;
         }
       }
       console.log(newSent);
@@ -68,6 +69,7 @@ export class HourSentimentResolver {
       //     return sentis;
       //   }
     }
+    console.log(currencyFind.terms.length, thisSenti.length);
     let num = currencyFind.terms.length;
     for (let o = 0; o < newSent.sentiment.length; o++) {
       newSent.sentiment[o] = newSent.sentiment[o] / num;
