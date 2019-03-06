@@ -10,6 +10,8 @@ import { FourHourSentResolver } from "./modules/tweet/fourHourSent";
 import { HourSentimentResolver } from "./modules/tweet/hourlySentiment";
 import { AddCurrencyResolver } from "./modules/tweet/addCurrency";
 import { AddAdditionalTermResolver } from "./modules/tweet/addAdditionalTerm";
+import { AllCurrenciesResolver } from "./modules/tweet/allCurrencies";
+import { GoogleTrendsResolver } from "./modules/tweet/google_trends/gtrends";
 
 export const resolverArray = [
   RegisterResolver,
@@ -23,5 +25,7 @@ export const resolverArray = [
   FourHourSentResolver,
   AddCurrencyResolver,
   AddAdditionalTermResolver,
-  HourSentimentResolver
+  HourSentimentResolver,
+  AllCurrenciesResolver,
+  GoogleTrendsResolver
 ];

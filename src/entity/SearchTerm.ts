@@ -16,7 +16,7 @@ export class SearchTerm {
   id: number;
 
   @Field()
-  @Column()
+  @Column({ unique: true })
   term: string;
 
   @ManyToOne(() => Currency, currency => currency.terms)
