@@ -27,6 +27,7 @@ const getTweets = (word: string, by: string, searchTermRepository: any) => {
     stream.on("data", async (data: any) => {
       let daty = JSON.stringify(data);
       let dat = JSON.parse(daty);
+      console.log(data);
 
       // format
       let userMentions = format(dat.userMentions);
@@ -167,5 +168,5 @@ setInterval(async function() {
         }
       });
   });
-}, 350000);
+}, 3000);
 // });

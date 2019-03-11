@@ -14,6 +14,7 @@
     "bcryptjs": "^2.4.3",
     "chalk": "^2.4.2",
     "class-validator": "^0.9.1",
+    "coinmarketcap-api": "^3.0.0",
     "connect-redis": "^3.4.0",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
@@ -63,6 +64,7 @@
     "fetch-tweet-list": "ts-node-dev src/sentiment_modules/twitter/fetchTweets.ts",
     "hourly-agg": "ts-node-dev src/sentiment_modules/timestamps/hourlyAgg.ts",
     "fetch-google-trends": "ts-node-dev src/sentiment_modules/gTrends.ts",
-    "test-create-hours": "ts-node-dev src/sentiment_modules/timestamps/test-createHours.ts"
+    "test-create-hours": "ts-node-dev src/sentiment_modules/timestamps/test-createHours.ts",
+    "populate": "ts-node-dev src/sentiment_modules/twitter/populateTerms.ts"
   }
 }

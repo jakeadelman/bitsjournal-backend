@@ -1,7 +1,11 @@
 const twit = require("scrape-twitter");
 const fetchTweets = () => {
   return new Promise(() => {
-    let stream = new twit.ListStream("ai_thought_rt", "CT", { count: 10 });
+    let stream = new twit.TimelineStream("ai_thought_rt", {
+      retweets: true,
+      replies: false,
+      count: 10
+    });
     stream.on("error", err => {
       console.log(err);
     });

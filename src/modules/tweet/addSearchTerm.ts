@@ -30,14 +30,22 @@ export class AddSearchTermResolver {
       where: { name: currencyName }
     });
 
-    if (!!currency) {
+    if (typeof currency !== "undefined") {
       let newSearchTerm = new SearchTerm();
       newSearchTerm.currency = currency!;
       newSearchTerm.term = searchterm;
-      await stRepo.save(newSearchTerm);
-
+      let saved = await stRepo
+        .save(newSearchTerm)
+        .catch(() => console.log("didnt save"));
+      if (typeof saved == "undefined") {
+        connection.close();
+        return false;
+      }
       //close connection
       connection.close();
+    } else {
+      connection.close();
+      return false;
     }
     return true;
   }

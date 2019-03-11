@@ -168,7 +168,7 @@ export const checkNer = (array: any[]) => {
   });
 };
 
-const checkSpam = (tweet: any, repository: any, theTerms: string[]) => {
+const checkSpam = (tweet: any, repository: any, theTerms: any[]) => {
   return new Promise(async resolve => {
     let id = await repository.findOne({
       tweetId: tweet.tweetId
@@ -187,6 +187,9 @@ const checkSpam = (tweet: any, repository: any, theTerms: string[]) => {
     }
 
     if (tweet.text.includes(".com") && tweet.favoriteCount < 2) {
+      resolve(false);
+    }
+    if (tweet.text.includes(".co") && tweet.favoriteCount < 2) {
       resolve(false);
     }
 
