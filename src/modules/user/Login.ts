@@ -30,8 +30,9 @@ export class LoginResolver {
       console.log("user not confirmed");
       return null;
     }
-
-    ctx.req.session!.userId = user.id;
+    let sess = ctx.req.session;
+    sess!.userId = user.id;
+    console.log(ctx.req.session!.userId);
     console.log("user has been logged in");
 
     return true;

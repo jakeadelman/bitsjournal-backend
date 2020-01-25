@@ -12,12 +12,16 @@
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "bcryptjs": "^2.4.3",
+    "bit_mex_api": "^1.2.1",
+    "bitmex-node": "^1.9.0",
+    "bitmex-realtime-api": "^0.4.3",
     "chalk": "^2.4.2",
     "class-validator": "^0.9.1",
     "coinmarketcap-api": "^3.0.0",
     "connect-redis": "^3.4.0",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
+    "date-and-time": "^0.12.0",
     "dateformat": "^3.0.3",
     "dotenv": "^6.2.0",
     "emoji-tree": "^1.1.2",
@@ -64,7 +68,8 @@
     "fetch-tweet-list": "ts-node-dev src/sentiment_modules/twitter/fetchTweets.ts",
     "hourly-agg": "ts-node-dev src/sentiment_modules/timestamps/hourlyAgg.ts",
     "fetch-google-trends": "ts-node-dev src/sentiment_modules/gTrends.ts",
-    "test-create-hours": "ts-node-dev src/sentiment_modules/timestamps/test-createHours.ts",
-    "populate": "ts-node-dev src/sentiment_modules/twitter/populateTerms.ts"
+    "test": "ts-node-dev src/sentiment_modules/bitmex/test.ts",
+    "populate": "ts-node-dev src/sentiment_modules/twitter/populateTerms.ts",
+    "fetch-execution": "ts-node-dev src/sentiment_modules/bitmex/fetchExecution.ts"
   }
 }
