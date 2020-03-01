@@ -13,6 +13,8 @@ import { AddAdditionalTermResolver } from "./modules/tweet/addAdditionalTerm";
 import { AllCurrenciesResolver } from "./modules/tweet/allCurrencies";
 import { GoogleTrendsResolver } from "./modules/tweet/google_trends/gtrends";
 import { AddApiKeyResolver } from "./modules/bitmex/addApiKey";
+import { TradeHistoryResolver } from "./modules/bitmex/tradeHistory";
+import { PopulateResolver } from "./modules/bitmex/populate";
 
 export const resolverArray = [
   RegisterResolver,
@@ -29,5 +31,7 @@ export const resolverArray = [
   HourSentimentResolver,
   AllCurrenciesResolver,
   GoogleTrendsResolver,
-  AddApiKeyResolver
+  AddApiKeyResolver,
+  TradeHistoryResolver,
+  PopulateResolver
 ];

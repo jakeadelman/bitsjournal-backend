@@ -1,26 +1,50 @@
 export function createOrderObj(userNum, exec: any): Promise<OrderObj> {
-  console.log("creating order obj");
+  // console.log("creating order obj");
   return new Promise<OrderObj>(async resolve => {
     let orderObject: OrderObj = {
       userNum: parseInt(userNum),
       execID: "",
       timestamp: "",
       side: "",
+      price: "",
       orderQty: 0,
       leavesQty: 0,
       currentQty: 0,
       avgEntryPrice: "",
       execType: "",
       orderType: "",
+      execGrossPnl: 0,
+      realizedPnl: 0,
+      commission: "",
       trdStart: false,
       trdEnd: false
     };
     orderObject.execID = exec.execID;
+    // console.log(exec.execID);
     orderObject.timestamp = exec.timestamp;
     orderObject.side = exec.side;
     orderObject.orderQty = exec.orderQty;
     orderObject.leavesQty = exec.leavesQty;
     orderObject.currentQty = exec.currentQty;
+
+    //price
+    orderObject.price = exec.price.toString();
+    // if (exec.stopPx != null) {
+    //   orderObject.price = exec.stopPx.toString();
+    // }
+
+    if (exec.execGrossPnl == undefined || exec.execGrossPnl == "undefined") {
+      orderObject.execGrossPnl = 0;
+    } else {
+      orderObject.execGrossPnl = exec.execGrossPnl;
+    }
+    if (exec.realizedPnl == undefined || exec.realizedPnl == "undefined") {
+      orderObject.realizedPnl = 0;
+    } else {
+      orderObject.realizedPnl = exec.realizedPnl;
+    }
+
+    orderObject.commission = exec.commission.toString();
     if (!exec.avgEntryPrice) {
       orderObject.avgEntryPrice = "0";
     } else {
@@ -40,28 +64,78 @@ export function createOrderObj(userNum, exec: any): Promise<OrderObj> {
 
     let realOrder: number;
     if (orderObject.side == "Sell") {
-      realOrder = orderObject.orderQty * -1;
-      realOrder = realOrder + orderObject.leavesQty;
+      realOrder = exec.orderQty - exec.leavesQty * -1;
+      // realOrder = realOrder + orderObject.leavesQty;
     } else {
-      realOrder = orderObject.orderQty - orderObject.leavesQty;
+      realOrder = exec.orderQty - exec.leavesQty;
     }
-    if (realOrder == orderObject.currentQty) {
-      orderObject.trdStart = true;
-    }
+
     if (orderObject.currentQty == 0 && orderObject.execType == "Trade") {
       orderObject.trdEnd = true;
-    } else {
-      orderObject.trdEnd = false;
+    }
+    if (
+      orderObject.side == "Sell" &&
+      realOrder + orderObject.currentQty < 0 &&
+      realOrder + orderObject.currentQty > realOrder
+    ) {
+      orderObject.trdEnd = true;
+    }
+    if (
+      orderObject.side == "Buy" &&
+      orderObject.currentQty > 0 &&
+      realOrder > orderObject.currentQty
+    ) {
+      console.log(
+        realOrder + orderObject.currentQty,
+        realOrder,
+        orderObject.timestamp
+      );
+      orderObject.trdEnd = true;
     }
     resolve(orderObject);
   });
 }
 
-export function newDate() {
-  let dt: any = new Date(new Date().toUTCString());
-  dt = dt.toISOString();
-  return dt;
+export function newDate(hrsBack: number) {
+  if (hrsBack == 0) {
+    let dt: any = new Date(new Date().toUTCString());
+    dt = dt.toISOString();
+    return dt;
+  } else {
+    let dt: any = new Date(new Date().toUTCString());
+    dt.setHours(dt.getHours() - hrsBack);
+    dt = dt.toISOString();
+    return dt;
+  }
   // console.log(dt);
+}
+
+export async function genDatesList(): Promise<any> {
+  return new Promise(async resolve => {
+    let daysBack = 8;
+    let arr: string[] = [];
+    for (let i = 0; i < daysBack; i++) {
+      let num = 24 * i;
+      let date: string = newDate(num);
+      arr.push(date);
+      if (i == daysBack - 1) {
+        let newArr = arr.reverse();
+        resolve(newArr);
+      }
+    }
+    // return [];
+  });
+}
+
+export function makeid(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }
 
 export interface OrderObj {
@@ -69,12 +143,16 @@ export interface OrderObj {
   execID: string;
   timestamp: string;
   side: string;
+  price: string;
   orderQty: number;
   leavesQty: number;
   currentQty: number;
   avgEntryPrice: string;
   execType: string;
   orderType: string;
+  execGrossPnl: number;
+  realizedPnl: number;
+  commission: string;
   trdStart: boolean;
   trdEnd: boolean;
 }

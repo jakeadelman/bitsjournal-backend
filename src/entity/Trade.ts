@@ -31,6 +31,10 @@ export class Trade extends BaseEntity {
   timestamp: string;
 
   @Field()
+  @Column({ nullable: true })
+  price: string;
+
+  @Field()
   @Column()
   side: string;
 
@@ -43,7 +47,7 @@ export class Trade extends BaseEntity {
   leavesQty: number;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   currentQty: number;
 
   @Field()
@@ -57,6 +61,18 @@ export class Trade extends BaseEntity {
   @Field()
   @Column()
   orderType: string;
+
+  @Field()
+  @Column({ nullable: true })
+  execGrossPnl: number;
+
+  @Field()
+  @Column({ nullable: true })
+  realizedPnl: number;
+
+  @Field()
+  @Column({ nullable: true })
+  commission: string;
 
   @Field()
   @Column()

@@ -1,7 +1,7 @@
 import { BitmexAPI } from "bitmex-node";
 import { User } from "../../entity/User";
 import { Trade } from "../../entity/Trade";
-import { createOrderObj, newDate } from "./bitmexHelpers";
+import { createOrderObj, makeid } from "./bitmexHelpers";
 import { createConn } from "../../modules/utils/connectionOptions";
 
 async function fetchHistory(userNum, key, secret, conn, symbol, history) {
@@ -12,7 +12,8 @@ async function fetchHistory(userNum, key, secret, conn, symbol, history) {
   return new Promise(async (resolve: any) => {
     const executionHistory = await bitmex.User.getExecutionHistory({
       symbol: symbol,
-      timestamp: history
+      timestamp: history,
+      reverse: true
     });
     // let conn = await createConn(userNum.toString() + "sldfjk");
     console.log(executionHistory.length, userNum);
@@ -32,12 +33,16 @@ async function fetchHistory(userNum, key, secret, conn, symbol, history) {
         newTrade.execID = orderObject.execID;
         newTrade.timestamp = orderObject.timestamp;
         newTrade.side = orderObject.side;
+        newTrade.price = orderObject.price;
         newTrade.orderQty = orderObject.orderQty;
         newTrade.leavesQty = orderObject.leavesQty;
         newTrade.currentQty = orderObject.currentQty;
         newTrade.avgEntryPrice = orderObject.avgEntryPrice;
         newTrade.execType = orderObject.execType;
         newTrade.orderType = orderObject.orderType;
+        newTrade.execGrossPnl = orderObject.execGrossPnl;
+        newTrade.realizedPnl = orderObject.realizedPnl;
+        newTrade.commission = orderObject.commission;
         newTrade.trdStart = orderObject.trdStart;
         newTrade.trdEnd = orderObject.trdEnd;
         tradeRepo
@@ -58,13 +63,14 @@ async function fetchHistory(userNum, key, secret, conn, symbol, history) {
 }
 
 setInterval(async function() {
-  let newconn = await createConn("hello");
+  let randId = makeid(10);
+  let newconn = await createConn(randId);
   let userRepo = newconn.getRepository(User);
   let userNums = await userRepo.find({
     select: ["id", "apiKeyID", "apiKeySecret"]
   });
   console.log(userNums);
-  let currDate: any = newDate();
+  // let oneHrBack: any = newDate(24);
 
   for (let i = 0; i < userNums.length; i++) {
     fetchHistory(
@@ -73,7 +79,7 @@ setInterval(async function() {
       userNums[i].apiKeySecret,
       newconn,
       "XBTUSD",
-      currDate
+      "2020-01-15T12:00:00.000Z"
     ).then(async res => {
       await newconn.close();
       console.log("closed connection");
@@ -81,4 +87,4 @@ setInterval(async function() {
     });
   }
   // newconn.close();
-}, 30000);
+}, 10000);
