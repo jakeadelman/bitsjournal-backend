@@ -4,7 +4,7 @@ import { Trade } from "../../entity/Trade";
 import { createOrderObj, genDatesList, makeid } from "./bitmexHelpers";
 import { createConn } from "../../modules/utils/connectionOptions";
 
-async function fetchHistory(
+export async function fetchHistory(
   userNum,
   conn,
   symbol,
@@ -95,7 +95,10 @@ async function fetchHistory(
                           await tradeRepo.save(findings[i]);
                           torf = false;
                         }
-                        if (findings[i].trdEnd == true) {
+                        if (
+                          findings[i].trdEnd == true &&
+                          findings[i].trdStart !== true
+                        ) {
                           torf = true;
                         }
                         if (i == findings.length - 1) {

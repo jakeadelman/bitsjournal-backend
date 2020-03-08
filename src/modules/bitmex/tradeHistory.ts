@@ -1,12 +1,14 @@
 import { Resolver, Ctx, Query, Arg } from "type-graphql";
 // import { createConnection } from "typeorm";
 import { createConn } from "../utils/connectionOptions";
+// import { Between } from "typeorm";
 import { Between } from "typeorm";
 
 import { User } from "../../entity/User";
 import { Trade } from "../../entity/Trade";
 import { MyContext } from "../../types/MyContext";
 import { makeid } from "../../sentiment_modules/bitmex/bitmexHelpers";
+// import { MoreThanDate, LessThanDate } from "./helpers";
 
 @Resolver()
 export class TradeHistoryResolver {
@@ -29,12 +31,15 @@ export class TradeHistoryResolver {
       where: { id: ctx.req.session!.userId }
     });
     console.log(start, end);
+    console.log(thisUser[0]);
     let findings = await tradeRepo.find({
-      where: {
-        user: thisUser[0],
-        relations: ["user"],
-        timestamp: Between(start, end)
-      },
+      where: [
+        {
+          user: thisUser[0],
+          relations: ["user"],
+          timestamp: Between(start, end)
+        }
+      ],
       order: { timestamp: "DESC" }
     });
     console.log(findings);

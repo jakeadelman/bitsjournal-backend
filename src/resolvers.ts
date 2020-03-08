@@ -14,6 +14,7 @@ import { AllCurrenciesResolver } from "./modules/tweet/allCurrencies";
 import { GoogleTrendsResolver } from "./modules/tweet/google_trends/gtrends";
 import { AddApiKeyResolver } from "./modules/bitmex/addApiKey";
 import { TradeHistoryResolver } from "./modules/bitmex/tradeHistory";
+import { CandleHistoryResolver } from "./modules/bitmex/candles";
 import { PopulateResolver } from "./modules/bitmex/populate";
 
 export const resolverArray = [
@@ -33,5 +34,6 @@ export const resolverArray = [
   GoogleTrendsResolver,
   AddApiKeyResolver,
   TradeHistoryResolver,
-  PopulateResolver
+  PopulateResolver,
+  CandleHistoryResolver
 ];

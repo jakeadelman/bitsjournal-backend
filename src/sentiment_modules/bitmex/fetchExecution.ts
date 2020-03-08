@@ -1,66 +1,10 @@
 import { BitmexAPI } from "bitmex-node";
 import { User } from "../../entity/User";
-import { Trade } from "../../entity/Trade";
-import { createOrderObj, makeid } from "./bitmexHelpers";
+// import { Trade } from "../../entity/Trade";
+// import { Trade } from "../../entity/Trade";
+import { newDate, makeid } from "./bitmexHelpers";
 import { createConn } from "../../modules/utils/connectionOptions";
-
-async function fetchHistory(userNum, key, secret, conn, symbol, history) {
-  const bitmex = new BitmexAPI({
-    apiKeyID: key,
-    apiKeySecret: secret
-  });
-  return new Promise(async (resolve: any) => {
-    const executionHistory = await bitmex.User.getExecutionHistory({
-      symbol: symbol,
-      timestamp: history,
-      reverse: true
-    });
-    // let conn = await createConn(userNum.toString() + "sldfjk");
-    console.log(executionHistory.length, userNum);
-    console.log(executionHistory);
-    const userRepo = conn.getRepository(User);
-    const tradeRepo = conn.getRepository(Trade);
-    const thisUser = await userRepo.find({
-      where: { id: parseInt(userNum), select: "id" }
-    });
-    console.log(thisUser[0]);
-    let j = 0;
-    for (let i = 0; i < executionHistory.length; i++) {
-      createOrderObj(userNum, executionHistory[i]).then(async orderObject => {
-        console.log(orderObject);
-        let newTrade = new Trade();
-        newTrade.user = thisUser[0]!;
-        newTrade.execID = orderObject.execID;
-        newTrade.timestamp = orderObject.timestamp;
-        newTrade.side = orderObject.side;
-        newTrade.price = orderObject.price;
-        newTrade.orderQty = orderObject.orderQty;
-        newTrade.leavesQty = orderObject.leavesQty;
-        newTrade.currentQty = orderObject.currentQty;
-        newTrade.avgEntryPrice = orderObject.avgEntryPrice;
-        newTrade.execType = orderObject.execType;
-        newTrade.orderType = orderObject.orderType;
-        newTrade.execGrossPnl = orderObject.execGrossPnl;
-        newTrade.realizedPnl = orderObject.realizedPnl;
-        newTrade.commission = orderObject.commission;
-        newTrade.trdStart = orderObject.trdStart;
-        newTrade.trdEnd = orderObject.trdEnd;
-        tradeRepo
-          .save(newTrade)
-          .then(r => {
-            j++;
-            console.log(j);
-            console.log("successfully saved trade " + i.toString());
-            if (j == executionHistory.length - 1) {
-              resolve(true);
-            }
-            console.log(r);
-          })
-          .catch(err => console.log(err));
-      });
-    }
-  });
-}
+import { fetchHistory } from "./populateExecution";
 
 setInterval(async function() {
   let randId = makeid(10);
@@ -70,21 +14,98 @@ setInterval(async function() {
     select: ["id", "apiKeyID", "apiKeySecret"]
   });
   console.log(userNums);
-  // let oneHrBack: any = newDate(24);
-
   for (let i = 0; i < userNums.length; i++) {
-    fetchHistory(
-      userNums[i].id,
-      userNums[i].apiKeyID,
-      userNums[i].apiKeySecret,
-      newconn,
-      "XBTUSD",
-      "2020-01-15T12:00:00.000Z"
-    ).then(async res => {
-      await newconn.close();
-      console.log("closed connection");
-      console.log(res);
-    });
+    try {
+      let symbol = "XBTUSD";
+
+      const bitmex = new BitmexAPI({
+        apiKeyID: userNums[i].apiKeyID,
+        apiKeySecret: userNums[i].apiKeySecret
+      });
+      // console.log(bitmex);
+      const fullExecHistory = await bitmex.Execution.getTradeHistory({
+        symbol: symbol,
+        count: 100,
+        reverse: true
+      });
+      console.log(fullExecHistory[0]);
+      let utcTime: any = newDate(0);
+
+      fetchHistory(
+        userNums[i].id,
+        newconn,
+        symbol,
+        utcTime,
+        fullExecHistory,
+        bitmex
+      )
+        .then(async res => {
+          console.log(res);
+          if (i == userNums.length - 1) {
+            await newconn.close();
+            console.log("closed connection");
+          }
+        })
+        .catch(async err => {
+          console.log(err);
+          if (i == userNums.length - 1) {
+            await newconn.close();
+            console.log("closed connection");
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
   }
-  // newconn.close();
-}, 10000);
+}, 60000);
+
+// import { BitmexAPI } from "bitmex-node";
+// import { User } from "../../entity/User";
+// import { Trade } from "../../entity/Trade";
+// import { createOrderObj, genDatesList, makeid } from "./bitmexHelpers";
+// import { createConn } from "../../modules/utils/connectionOptions";
+
+// export async function populate(userId) {
+//   return new Promise(async resolve => {
+//     let randId = makeid(10);
+//     let newconn = await createConn(randId);
+//     let userRepo = newconn.getRepository(User);
+//     let userNums = await userRepo.find({
+//       where: { id: userId },
+//       select: ["id", "apiKeyID", "apiKeySecret"]
+//     });
+//     try {
+//       const bitmex = new BitmexAPI({
+//         apiKeyID: userNums[0].apiKeyID,
+//         apiKeySecret: userNums[0].apiKeySecret
+//       });
+//       let symbol = "XBTUSD";
+//       const fullExecHistory = await bitmex.Execution.getTradeHistory({
+//         symbol: symbol,
+//         count: 500,
+//         reverse: true
+//       });
+
+//       // console.log(userNums);
+//       // let oneHrBack: any = newDate(1);
+//       let datesList = await genDatesList();
+//       console.log(datesList);
+//       var theEye = 1; //  set your counter to 1
+//       myLoop(
+//         datesList,
+//         userNums,
+//         newconn,
+//         theEye,
+//         fullExecHistory,
+//         bitmex,
+//         symbol
+//       )
+//         .then(() => {
+//           resolve(true);
+//         })
+//         .catch(err => console.log(err));
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   });
+// }

@@ -110,14 +110,38 @@ export function newDate(hrsBack: number) {
   // console.log(dt);
 }
 
+export function newTwelveHourDate(hrsBack: number) {
+  if (hrsBack == 0) {
+    let dt: any = new Date(new Date().toUTCString());
+    dt.setHours(7, 0, 0, 0);
+    dt = dt.toISOString();
+    return dt;
+  } else {
+    let dt: any = new Date(new Date().toUTCString());
+    dt.setHours(dt.getHours() - hrsBack);
+    dt.setHours(7, 0, 0, 0);
+    dt = dt.toISOString();
+    return dt;
+  }
+  // console.log(dt);
+}
+
 export async function genDatesList(): Promise<any> {
   return new Promise(async resolve => {
     let daysBack = 8;
     let arr: string[] = [];
     for (let i = 0; i < daysBack; i++) {
       let num = 24 * i;
-      let date: string = newDate(num);
-      arr.push(date);
+
+      if (i == 0) {
+        let otherDate = newTwelveHourDate(num);
+        let newerDate = newDate(num);
+        arr.push(otherDate);
+        arr.push(newerDate);
+      } else {
+        let date: string = newTwelveHourDate(num);
+        arr.push(date);
+      }
       if (i == daysBack - 1) {
         let newArr = arr.reverse();
         resolve(newArr);
