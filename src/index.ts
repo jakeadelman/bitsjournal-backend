@@ -37,8 +37,8 @@ const main = async () => {
       origin: [
         "http://localhost:3000",
         "https://socialslant.io",
-        "https://tradrr.app",
-        "https://bitsjournal.now.sh"
+        "https://bitsjournal.io",
+        "https://bitsjournal-frontend.now.sh"
       ]
     })
   );
