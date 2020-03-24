@@ -17,7 +17,9 @@ export function createOrderObj(userNum, exec: any): Promise<OrderObj> {
       realizedPnl: 0,
       commission: "",
       trdStart: false,
-      trdEnd: false
+      trdEnd: false,
+      notes: "undefined",
+      hashtags: "undefined"
     };
     orderObject.execID = exec.execID;
     // console.log(exec.execID);
@@ -64,7 +66,7 @@ export function createOrderObj(userNum, exec: any): Promise<OrderObj> {
 
     let realOrder: number;
     if (orderObject.side == "Sell") {
-      realOrder = exec.orderQty - exec.leavesQty * -1;
+      realOrder = (exec.orderQty - exec.leavesQty) * -1;
       // realOrder = realOrder + orderObject.leavesQty;
     } else {
       realOrder = exec.orderQty - exec.leavesQty;
@@ -73,24 +75,31 @@ export function createOrderObj(userNum, exec: any): Promise<OrderObj> {
     if (orderObject.currentQty == 0 && orderObject.execType == "Trade") {
       orderObject.trdEnd = true;
     }
+    // if (orderObject.timestamp == "2020-03-07T08:43:18.644Z") {
+    //   console.log(realOrder, orderObject.currentQty);
+    //   console.log("issss");
+    // }
     if (
       orderObject.side == "Sell" &&
-      realOrder + orderObject.currentQty < 0 &&
-      realOrder + orderObject.currentQty > realOrder
+      orderObject.currentQty < 0 &&
+      realOrder < orderObject.currentQty
     ) {
+      console.log("IS SELL");
       orderObject.trdEnd = true;
+      orderObject.trdStart = true;
     }
     if (
       orderObject.side == "Buy" &&
       orderObject.currentQty > 0 &&
       realOrder > orderObject.currentQty
     ) {
-      console.log(
-        realOrder + orderObject.currentQty,
-        realOrder,
-        orderObject.timestamp
-      );
+      // console.log(
+      //   realOrder + orderObject.currentQty,
+      //   realOrder,
+      //   orderObject.timestamp
+      // );
       orderObject.trdEnd = true;
+      orderObject.trdStart = true;
     }
     resolve(orderObject);
   });
@@ -128,7 +137,7 @@ export function newTwelveHourDate(hrsBack: number) {
 
 export async function genDatesList(): Promise<any> {
   return new Promise(async resolve => {
-    let daysBack = 8;
+    let daysBack = 15;
     let arr: string[] = [];
     for (let i = 0; i < daysBack; i++) {
       let num = 24 * i;
@@ -179,4 +188,6 @@ export interface OrderObj {
   commission: string;
   trdStart: boolean;
   trdEnd: boolean;
+  notes: string;
+  hashtags: string;
 }

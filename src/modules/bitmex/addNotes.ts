@@ -1,8 +1,8 @@
-import { Resolver, Ctx, Query, Arg } from "type-graphql";
+import { Resolver, Ctx, Mutation, Arg } from "type-graphql";
 // import { createConnection } from "typeorm";
 import { createConn } from "../utils/connectionOptions";
 // import { Between } from "typeorm";
-import { Between } from "typeorm";
+// import { Between } from "typeorm";
 
 import { User } from "../../entity/User";
 import { Trade } from "../../entity/Trade";
@@ -11,11 +11,12 @@ import { makeid } from "../../sentiment_modules/bitmex/bitmexHelpers";
 // import { MoreThanDate, LessThanDate } from "./helpers";
 
 @Resolver()
-export class TradeHistoryResolver {
-  @Query(() => [Trade])
-  async fetchTradeHistory(
-    @Arg("start") start: string,
-    @Arg("end") end: string,
+export class AddNotesResolver {
+  @Mutation(() => String, { nullable: true })
+  async addNotes(
+    @Arg("time") time: string,
+    @Arg("notes") notes: string,
+    // @Arg("hashtags") hashtags: string,
     @Ctx() ctx: MyContext
   ): Promise<any | undefined> {
     if (!ctx.req.session!.userId) {
@@ -30,21 +31,31 @@ export class TradeHistoryResolver {
     let thisUser = await userRepo.find({
       where: { id: ctx.req.session!.userId }
     });
-    console.log(start, end);
+    // console.log(start, end);
     console.log(thisUser[0]);
     let findings = await tradeRepo.find({
       where: [
         {
           user: thisUser[0],
           relations: ["user"],
-          timestamp: Between(start, end)
+          timestamp: time
         }
       ],
-      order: { timestamp: "DESC", searchTimestamp: "DESC", tradeNum: "ASC" }
+      order: { tradeNum: "ASC" }
     });
-    // console.log(findings);
-    await connection.close();
+    try {
+      if (notes != "undefined") {
+        findings[0]!.notes = notes;
+      }
+      // if (hashtags != "undefined") {
+      //   findings[0]!.hashtags = hashtags;
+      // }
+      await findings[0]!.save();
+      await connection.close();
 
-    return findings;
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 }

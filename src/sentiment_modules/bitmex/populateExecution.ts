@@ -44,6 +44,8 @@ export async function fetchHistory(
           // console.log(orderObject);
 
           let newTrade = new Trade();
+          newTrade.tradeNum = i;
+          newTrade.searchTimestamp = history;
 
           //get execution history records
           newTrade.price = orderObject.price;
@@ -73,6 +75,9 @@ export async function fetchHistory(
               newTrade.realizedPnl = orderObject.realizedPnl;
               newTrade.execGrossPnl = orderObject.execGrossPnl;
               newTrade.commission = orderObject.commission;
+              newTrade.notes = "undefined";
+              newTrade.hashtags = "undefined";
+
               tradeRepo
                 .save(newTrade)
                 .then(async r => {
@@ -84,7 +89,11 @@ export async function fetchHistory(
                     let findings = await tradeRepo.find({
                       select: ["id", "trdEnd", "trdStart"],
                       where: { userId: parseInt(userNum) },
-                      order: { timestamp: "ASC" }
+                      order: {
+                        timestamp: "ASC",
+                        searchTimestamp: "ASC",
+                        tradeNum: "DESC"
+                      }
                     });
                     if (findings[0]) {
                       console.log(findings.length);

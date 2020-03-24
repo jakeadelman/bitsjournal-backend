@@ -23,6 +23,10 @@ export class Candle {
 
   @Field()
   @Column()
+  timeframe: string;
+
+  @Field()
+  @Column()
   open: string;
 
   @Field()

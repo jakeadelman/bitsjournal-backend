@@ -38,7 +38,7 @@ const main = async () => {
         "http://localhost:3000",
         "https://socialslant.io",
         "https://tradrr.app",
-        "https://tradrr-dev.now.sh"
+        "https://bitsjournal.now.sh"
       ]
     })
   );

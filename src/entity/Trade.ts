@@ -28,6 +28,14 @@ export class Trade extends BaseEntity {
 
   @Field()
   @Column()
+  tradeNum: number;
+
+  @Field()
+  @Column()
+  searchTimestamp: string;
+
+  @Field()
+  @Column()
   timestamp: string;
 
   @Field()
@@ -81,4 +89,12 @@ export class Trade extends BaseEntity {
   @Field()
   @Column()
   trdEnd: boolean;
+
+  @Field()
+  @Column({ nullable: true })
+  notes: string;
+
+  @Field()
+  @Column({ nullable: true })
+  hashtags: string;
 }

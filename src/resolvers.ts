@@ -14,7 +14,12 @@ import { AllCurrenciesResolver } from "./modules/tweet/allCurrencies";
 import { GoogleTrendsResolver } from "./modules/tweet/google_trends/gtrends";
 import { AddApiKeyResolver } from "./modules/bitmex/addApiKey";
 import { TradeHistoryResolver } from "./modules/bitmex/tradeHistory";
-import { CandleHistoryResolver } from "./modules/bitmex/candles";
+import { FiveMinuteCandleHistoryResolver } from "./modules/bitmex/fiveMinuteCandles";
+import { OneMinuteCandleHistoryResolver } from "./modules/bitmex/oneMinuteCandles";
+import { OneHourCandleHistoryResolver } from "./modules/bitmex/hourCandles";
+import { OneDayCandleHistoryResolver } from "./modules/bitmex/dayCandles";
+import { AddNotesResolver } from "./modules/bitmex/addNotes";
+import { AddHashtagResolver } from "./modules/bitmex/addHashtag";
 import { PopulateResolver } from "./modules/bitmex/populate";
 
 export const resolverArray = [
@@ -35,5 +40,10 @@ export const resolverArray = [
   AddApiKeyResolver,
   TradeHistoryResolver,
   PopulateResolver,
-  CandleHistoryResolver
+  OneMinuteCandleHistoryResolver,
+  FiveMinuteCandleHistoryResolver,
+  OneDayCandleHistoryResolver,
+  OneHourCandleHistoryResolver,
+  AddNotesResolver,
+  AddHashtagResolver
 ];

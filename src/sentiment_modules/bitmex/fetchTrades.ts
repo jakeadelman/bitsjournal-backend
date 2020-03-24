@@ -11,18 +11,24 @@ export const fetchTrades = async (binSize, symbol, count, conn) => {
       apiKeyID: "WxX-i47QkysTG_8Yw2984EWb",
       apiKeySecret: "ee4YzptdaJK7hoQAolsl4EjkFt3JOhFcB2Kxi2zIff3VruM"
     });
+    console.log(count, "THIS COUNT");
     bitmex.Trade.getBucketed({
       symbol: symbol,
       binSize: binSize,
       count: count,
       reverse: true
     }).then(async res => {
-      console.log(res.length.toString() + " new candles");
+      console.log(
+        res.length.toString() +
+          " new candles for timeframe " +
+          binSize.toString()
+      );
 
       for (let i = 0; i < res.length; i++) {
         let newCandle = new Candle();
         newCandle.timestamp = res[i].timestamp;
         newCandle.uniquekey = res[i].timestamp + binSize;
+        newCandle.timeframe = binSize;
 
         newCandle.symbol = res[i].symbol;
         newCandle.open = res[i].open.toString();
@@ -36,6 +42,7 @@ export const fetchTrades = async (binSize, symbol, count, conn) => {
         newCandle.turnover = res[i].turnover.toString();
         newCandle.homeNotional = res[i].homeNotional.toString();
         newCandle.foreignNotional = res[i].foreignNotional.toString();
+
         candleRepo
           .save(newCandle)
           .then(() => {
