@@ -10,7 +10,7 @@ export const createConn = (name: string): Promise<Connection> => {
         port: 25060,
         username: "doadmin",
         password: "xndvas26gehlgnn2",
-        database: "newpool",
+        database: "defaultdb",
         ssl: { rejectUnauthorized: false },
         logging: false,
         entities: [
@@ -55,7 +55,7 @@ export const createConns = (name: string): Promise<Connection[]> => {
           port: 25060,
           username: "doadmin",
           password: "xndvas26gehlgnn2",
-          database: "newpool",
+          database: "defaultdb",
           ssl: { rejectUnauthorized: false },
           logging: false,
           entities: [
@@ -71,7 +71,7 @@ export const createConns = (name: string): Promise<Connection[]> => {
           port: 25060,
           username: "doadmin",
           password: "xndvas26gehlgnn2",
-          database: "newpool",
+          database: "defaultdb",
           ssl: { rejectUnauthorized: false },
           logging: false,
           entities: [

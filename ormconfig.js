@@ -1,4 +1,5 @@
 if (process.env.NODE_ENV === "production") {
+  console.log("CONNECTING TO REMOTE PRODUCTION DB");
   module.exports = {
     name: "default",
     type: "postgres",
@@ -6,7 +7,7 @@ if (process.env.NODE_ENV === "production") {
     port: 25060,
     username: "doadmin",
     password: "xndvas26gehlgnn2",
-    database: "newpool",
+    database: "defaultdb",
     extra: { ssl: true },
     ssl: {
       rejectUnauthorized: false
