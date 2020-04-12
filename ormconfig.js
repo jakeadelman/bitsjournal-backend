@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === "production") {
       // ca: "/etc/letsencrypt/live/sentwit.com/cert.pem"
     },
     synchronize: true,
-    logging: false,
+    logging: true,
     entities: [
       "src/entity/*.*",
       "src/entity/instagram/*.*",
@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === "production") {
     password: "jakeadelman",
     database: "instagauge",
     synchronize: true,
-    logging: false,
+    logging: true,
     entities: [
       "src/entity/*.*",
       "src/entity/instagram/*.*",

@@ -16,6 +16,8 @@ export class TradeHistoryResolver {
   async fetchTradeHistory(
     @Arg("start") start: string,
     @Arg("end") end: string,
+    @Arg("symbol") symbol: string,
+
     @Ctx() ctx: MyContext
   ): Promise<any | undefined> {
     if (!ctx.req.session!.userId) {
@@ -28,7 +30,7 @@ export class TradeHistoryResolver {
     let tradeRepo = connection.getRepository(Trade);
     let userRepo = connection.getRepository(User);
     let thisUser = await userRepo.find({
-      where: { id: ctx.req.session!.userId }
+      where: { id: ctx.req.session!.userId },
     });
     console.log("<< SEARCHING >>");
     console.log(start, end);
@@ -43,10 +45,11 @@ export class TradeHistoryResolver {
         {
           user: thisUser[0],
           relations: ["user"],
-          timestamp: Between(start, end)
-        }
+          timestamp: Between(start, end),
+          symbol: symbol,
+        },
       ],
-      order: { timestamp: "DESC", searchTimestamp: "DESC", tradeNum: "ASC" }
+      order: { timestamp: "DESC", searchTimestamp: "DESC", tradeNum: "ASC" },
     });
     console.log(findings.length, "# TRADES");
     await connection.close();

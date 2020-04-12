@@ -85,7 +85,7 @@ export async function fetchHistory(
                       // console.log(executionHistory.length);
                       let findings = await tradeRepo.find({
                         select: ["id", "trdEnd", "trdStart", "execType"],
-                        where: { userId: parseInt(userNum) },
+                        where: { userId: parseInt(userNum), symbol: symbol },
                         order: {
                           timestamp: "ASC",
                           searchTimestamp: "ASC",
@@ -153,38 +153,41 @@ export async function populateExecs(userId) {
         apiKeySecret: userNums[0].apiKeySecret,
       });
 
-      let symbol = "XBTUSD";
-      let fullExecHistory;
-      try {
-        fullExecHistory = await bitmex.Execution.getTradeHistory({
-          symbol: symbol,
-          count: 500,
-          reverse: true,
-        });
-        console.log("HERE1");
+      let symbols = ["XBTUSD", "XBTU20"];
+      for (let i = 0; i < symbols.length; i++) {
+        let symbol = symbols[i];
+        let fullExecHistory;
+        try {
+          fullExecHistory = await bitmex.Execution.getTradeHistory({
+            symbol: symbol,
+            count: 500,
+            reverse: true,
+          });
+          console.log("HERE1");
 
-        // console.log(userNums);
-        // let oneHrBack: any = newDate(1);
-        let datesList = await genDatesList();
-        console.log(datesList);
-        var theEye = 0; //  set your counter to 1
-        console.log("STARTING");
-        let ending = await myLoop(
-          datesList,
-          userNums,
-          newconn,
-          theEye,
-          fullExecHistory,
-          bitmex,
-          symbol
-        );
-        console.log(ending);
-        console.log("REAL END");
-        resolve(ending);
-      } catch (err) {
-        // console.log(fullExecHistory);
-        console.log("HERE2");
-        resolve(false);
+          // console.log(userNums);
+          // let oneHrBack: any = newDate(1);
+          let datesList = await genDatesList();
+          console.log(datesList);
+          var theEye = 0; //  set your counter to 1
+          console.log("STARTING");
+          let ending = await myLoop(
+            datesList,
+            userNums,
+            newconn,
+            theEye,
+            fullExecHistory,
+            bitmex,
+            symbol
+          );
+          console.log(ending);
+          console.log("REAL END");
+          resolve(ending);
+        } catch (err) {
+          // console.log(fullExecHistory);
+          console.log("HERE2");
+          resolve(false);
+        }
       }
     } catch (err) {
       console.log("ERRING");
