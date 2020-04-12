@@ -1,8 +1,8 @@
 import { Resolver, Ctx, Query, Arg } from "type-graphql";
 // import { createConnection } from "typeorm";
 import { createConn } from "../utils/connectionOptions";
-// import { Between } from "typeorm";
 import { Between } from "typeorm";
+// import { Between } from "typeorm";
 
 import { User } from "../../entity/User";
 import { Trade } from "../../entity/Trade";
@@ -30,8 +30,14 @@ export class TradeHistoryResolver {
     let thisUser = await userRepo.find({
       where: { id: ctx.req.session!.userId }
     });
+    console.log("<< SEARCHING >>");
     console.log(start, end);
     console.log(thisUser[0]);
+    // if (thisUser[0]!.apiKeyID == "none") {
+    //   console.log("user is none");
+    //   // return null;
+    //   return "ok";
+    // }
     let findings = await tradeRepo.find({
       where: [
         {
@@ -42,7 +48,7 @@ export class TradeHistoryResolver {
       ],
       order: { timestamp: "DESC", searchTimestamp: "DESC", tradeNum: "ASC" }
     });
-    // console.log(findings);
+    console.log(findings.length, "# TRADES");
     await connection.close();
 
     return findings;

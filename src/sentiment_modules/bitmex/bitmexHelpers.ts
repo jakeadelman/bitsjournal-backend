@@ -1,8 +1,9 @@
 export function createOrderObj(userNum, exec: any): Promise<OrderObj> {
   // console.log("creating order obj");
-  return new Promise<OrderObj>(async resolve => {
+  return new Promise<OrderObj>(async (resolve) => {
     let orderObject: OrderObj = {
       userNum: parseInt(userNum),
+      symbol: "",
       execID: "",
       timestamp: "",
       side: "",
@@ -19,8 +20,9 @@ export function createOrderObj(userNum, exec: any): Promise<OrderObj> {
       trdStart: false,
       trdEnd: false,
       notes: "undefined",
-      hashtags: "undefined"
+      hashtags: "undefined",
     };
+    orderObject.symbol = exec.symbol;
     orderObject.execID = exec.execID;
     // console.log(exec.execID);
     orderObject.timestamp = exec.timestamp;
@@ -28,6 +30,7 @@ export function createOrderObj(userNum, exec: any): Promise<OrderObj> {
     orderObject.orderQty = exec.orderQty;
     orderObject.leavesQty = exec.leavesQty;
     orderObject.currentQty = exec.currentQty;
+    orderObject.orderType = exec.ordType.toString();
 
     //price
     orderObject.price = exec.price.toString();
@@ -54,15 +57,15 @@ export function createOrderObj(userNum, exec: any): Promise<OrderObj> {
     }
 
     orderObject.execType = exec.execType;
-    if (
-      !exec.orderType ||
-      exec.orderType == undefined ||
-      exec.orderType == null
-    ) {
-      orderObject.orderType = "undefined";
-    } else {
-      orderObject.orderType = exec.orderType.toString();
-    }
+    // if (
+    //   exec.orderType ||
+    //   exec.orderType == undefined ||
+    //   exec.orderType == null
+    // ) {
+    //   orderObject.orderType = "undefined";
+    // } else {
+    //   orderObject.orderType = exec.ordType.toString();
+    // }
 
     let realOrder: number;
     if (orderObject.side == "Sell") {
@@ -82,7 +85,8 @@ export function createOrderObj(userNum, exec: any): Promise<OrderObj> {
     if (
       orderObject.side == "Sell" &&
       orderObject.currentQty < 0 &&
-      realOrder < orderObject.currentQty
+      realOrder < orderObject.currentQty &&
+      orderObject.execType == "Trade"
     ) {
       console.log("IS SELL");
       orderObject.trdEnd = true;
@@ -91,7 +95,8 @@ export function createOrderObj(userNum, exec: any): Promise<OrderObj> {
     if (
       orderObject.side == "Buy" &&
       orderObject.currentQty > 0 &&
-      realOrder > orderObject.currentQty
+      realOrder > orderObject.currentQty &&
+      orderObject.execType == "Trade"
     ) {
       // console.log(
       //   realOrder + orderObject.currentQty,
@@ -101,6 +106,10 @@ export function createOrderObj(userNum, exec: any): Promise<OrderObj> {
       orderObject.trdEnd = true;
       orderObject.trdStart = true;
     }
+    // if (orderObject.currentQty == realOrder) {
+    //   orderObject.trdStart = true;
+    // }
+
     resolve(orderObject);
   });
 }
@@ -136,7 +145,7 @@ export function newTwelveHourDate(hrsBack: number) {
 }
 
 export async function genDatesList(): Promise<any> {
-  return new Promise(async resolve => {
+  return new Promise(async (resolve) => {
     let daysBack = 15;
     let arr: string[] = [];
     for (let i = 0; i < daysBack; i++) {
@@ -173,6 +182,7 @@ export function makeid(length) {
 
 export interface OrderObj {
   userNum: number;
+  symbol: string;
   execID: string;
   timestamp: string;
   side: string;

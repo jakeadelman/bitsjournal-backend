@@ -11,11 +11,10 @@ import { makeid } from "../../sentiment_modules/bitmex/bitmexHelpers";
 // import { MoreThanDate, LessThanDate } from "./helpers";
 
 @Resolver()
-export class AddHashtagResolver {
+export class RemoveHashtagResolver {
   @Mutation(() => String, { nullable: true })
-  async addHashtag(
+  async removeHashtag(
     @Arg("time") time: string,
-    // @Arg("notes") notes: string,
     @Arg("hashtag") hashtag: string,
     @Ctx() ctx: MyContext
   ): Promise<any | undefined> {
@@ -29,7 +28,7 @@ export class AddHashtagResolver {
     let tradeRepo = connection.getRepository(Trade);
     let userRepo = connection.getRepository(User);
     let thisUser = await userRepo.find({
-      where: { id: ctx.req.session!.userId }
+      where: { id: ctx.req.session!.userId },
     });
     // console.log(start, end);
     console.log(thisUser[0]);
@@ -38,40 +37,52 @@ export class AddHashtagResolver {
         {
           user: thisUser[0],
           relations: ["user"],
-          timestamp: time
-        }
+          timestamp: time,
+        },
       ],
-      order: { tradeNum: "ASC" }
+      order: { tradeNum: "ASC" },
     });
     try {
       //   if (notes != "undefined") {
       //     findings[0]!.notes = notes;
       //   }
-      console.log("new hash is " + hashtag);
+      console.log("hashtag to remove is " + hashtag);
 
       if (hashtag != "undefined") {
         let hashtags = findings[0]!.hashtags.split(",");
         console.log(hashtags[0]);
         if (hashtags[0] == "undefined") {
+          console.log("<<<<<<<<<<<<<<<<<");
+          console.log("HASHTAGS length is", hashtags.length);
+          console.log("<<<<<<<<<<<<<<<<<");
+
           findings[0]!.hashtags = hashtag;
           await findings[0]!.save();
           await connection.close();
         } else {
+          let newHashtags: string = "";
+          console.log("<<<<<<<<<<<<<<<<<");
+          console.log("HASHTAGS length is", hashtags.length);
+          console.log("<<<<<<<<<<<<<<<<<");
           for (let i = 0; i < hashtags.length; i++) {
-            if (hashtag == hashtags[i]) {
-              // await findings[0]!.save();
-              await connection.close();
-
-              return "already added";
+            if (hashtag !== hashtags[i]) {
+              newHashtags += hashtags[i] + ",";
             }
             if (i == hashtags.length - 1) {
-              let oldHashtags = findings[0]!.hashtags;
+              if (hashtags.length == 1) {
+                findings[0]!.hashtags = "undefined";
+                await findings[0]!.save();
+                await connection.close();
+                return "saved new hashtags (length was 1)";
+              } else {
+                //   let oldHashtags = findings[0]!.hashtags;
+                newHashtags = newHashtags.substring(0, newHashtags.length - 1);
+                findings[0]!.hashtags = newHashtags;
+                await findings[0]!.save();
+                await connection.close();
 
-              findings[0]!.hashtags = oldHashtags + "," + hashtag;
-              await findings[0]!.save();
-              await connection.close();
-
-              return "was undefined";
+                return "saved new hashtags";
+              }
             }
           }
         }

@@ -4,7 +4,7 @@ import {
   Column,
   BaseEntity,
   ManyToOne,
-  JoinTable
+  JoinTable,
 } from "typeorm";
 import { User } from "./User";
 import { ObjectType, Field, ID } from "type-graphql";
@@ -15,12 +15,13 @@ export class Trade extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(
-    () => User,
-    user => user.trades
-  )
+  @ManyToOne(() => User, (user) => user.trades)
   @JoinTable()
   user: User;
+
+  @Field()
+  @Column()
+  symbol: string;
 
   @Field()
   @Column({ unique: true })

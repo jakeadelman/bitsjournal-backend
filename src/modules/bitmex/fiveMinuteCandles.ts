@@ -62,7 +62,7 @@ export class FiveMinuteCandleHistoryResolver {
       .orderBy("candle.timestamp", "DESC")
       .getMany();
 
-    connection.close();
+    await connection.close();
     // console.log(findings);
     // console.log(diffFiveMins);
     console.log(newStart, newEnd, timeframe);

@@ -26,10 +26,11 @@ export class AddApiKeyResolver {
       where: { id: userID },
       select: ["id", "apiKeyID", "apiKeySecret"]
     });
-    if (thisUser!.apiKeyID !== "none") {
-      console.log("user already has key");
-      return null;
-    }
+    // if (thisUser!.apiKeyID !== "none") {
+    //   console.log("user already has key");
+    //   connection.close();
+    //   return null;
+    // }
     thisUser!.apiKeyID = key;
     thisUser!.apiKeySecret = secret;
     await userRepo.save(thisUser!);

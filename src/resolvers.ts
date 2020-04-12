@@ -20,7 +20,9 @@ import { OneHourCandleHistoryResolver } from "./modules/bitmex/hourCandles";
 import { OneDayCandleHistoryResolver } from "./modules/bitmex/dayCandles";
 import { AddNotesResolver } from "./modules/bitmex/addNotes";
 import { AddHashtagResolver } from "./modules/bitmex/addHashtag";
+import { RemoveHashtagResolver } from "./modules/bitmex/removeHashtag";
 import { PopulateResolver } from "./modules/bitmex/populate";
+import { CheckApiResolver } from "./modules/bitmex/checkApiKey";
 
 export const resolverArray = [
   RegisterResolver,
@@ -45,5 +47,7 @@ export const resolverArray = [
   OneDayCandleHistoryResolver,
   OneHourCandleHistoryResolver,
   AddNotesResolver,
-  AddHashtagResolver
+  AddHashtagResolver,
+  CheckApiResolver,
+  RemoveHashtagResolver,
 ];

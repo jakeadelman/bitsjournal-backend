@@ -2,7 +2,7 @@ import { Resolver, Mutation, Ctx } from "type-graphql";
 // import { User } from "../../entity/User";
 import { MyContext } from "../../types/MyContext";
 import { createConn } from "../utils/connectionOptions";
-import { populate } from "../../sentiment_modules/bitmex/populateExecution";
+import { populateExecs } from "../../sentiment_modules/bitmex/populateExecution";
 
 @Resolver()
 export class PopulateResolver {
@@ -17,11 +17,11 @@ export class PopulateResolver {
       return null;
     }
     let userId = ctx.req.session!.userId;
-    let ans = await populate(userId);
-    if (ans) {
-      return true;
-    } else {
-      return false;
-    }
+    console.log("POPULATING");
+    console.log(userId);
+    let res = await populateExecs(userId);
+    connection.close();
+    console.log(res, "THIS RES");
+    return res;
   }
 }

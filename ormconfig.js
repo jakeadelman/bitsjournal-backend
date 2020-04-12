@@ -10,16 +10,16 @@ if (process.env.NODE_ENV === "production") {
     database: "defaultdb",
     extra: { ssl: true },
     ssl: {
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
       // ca: "/etc/letsencrypt/live/sentwit.com/cert.pem"
     },
     synchronize: true,
-    logging: true,
+    logging: false,
     entities: [
       "src/entity/*.*",
       "src/entity/instagram/*.*",
-      "src/entity/sentiment/*.*"
-    ]
+      "src/entity/sentiment/*.*",
+    ],
   };
 } else if (process.env.NODE_ENV === "development") {
   module.exports = {
@@ -31,11 +31,11 @@ if (process.env.NODE_ENV === "production") {
     password: "jakeadelman",
     database: "instagauge",
     synchronize: true,
-    logging: true,
+    logging: false,
     entities: [
       "src/entity/*.*",
       "src/entity/instagram/*.*",
-      "src/entity/sentiment/*.*"
-    ]
+      "src/entity/sentiment/*.*",
+    ],
   };
 }
