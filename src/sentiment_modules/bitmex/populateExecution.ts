@@ -24,11 +24,11 @@ export async function fetchHistory(
 
       const userRepo = conn.getRepository(User);
       const tradeRepo = conn.getRepository(Trade);
-      console.log("USERNUM IS ", userNum);
+      // console.log("USERNUM IS ", userNum);
       const thisUser = await userRepo.find({
         where: { id: parseInt(userNum), select: "id" },
       });
-      console.log(thisUser[0]);
+      // console.log(thisUser[0]);
       let j = 0;
       console.log(executionHistory.length, "LENGTH");
       if (executionHistory.length == 0) {
@@ -118,6 +118,7 @@ export async function fetchHistory(
                             torf = true;
                           }
                           if (i == findings.length - 1) {
+                            console.log("ENDING BITCH");
                             await resolve(r);
                           }
                         }
@@ -138,6 +139,32 @@ export async function fetchHistory(
   });
 }
 
+// if (i == 0) {
+// findings[0].trdStart = true;
+// findings[0].trdEnd = true;
+// await tradeRepo.save(findings[0]);
+// console.log("<<<<<<<<<<");
+// console.log("<<<<<<<<<<");
+// console.log("I IS OOONNNE");
+// console.log("<<<<<<<<<<");
+// console.log("<<<<<<<<<<");
+// let realOrder: number;
+// if (findings[0].side == "Sell") {
+//   realOrder =
+//     (parseInt(findings[0].orderQty) -
+//       parseInt(findings[0].leavesQty)) *
+//     -1;
+// } else {
+//   realOrder =
+//     parseInt(findings[0].orderQty) -
+//     parseInt(findings[0].leavesQty);
+// }
+// if (parseInt(findings[0].currentQty) == realOrder) {
+//   findings[0].trdStart = true;
+//   await tradeRepo.save(findings[0]);
+// }
+// }
+
 export async function populateExecs(userId) {
   return new Promise<any>(async (resolve) => {
     let randId = makeid(10);
@@ -153,7 +180,7 @@ export async function populateExecs(userId) {
         apiKeySecret: userNums[0].apiKeySecret,
       });
 
-      let symbols = ["XBTUSD", "XBTU20"];
+      let symbols = ["XBTUSD"];
       for (let i = 0; i < symbols.length; i++) {
         let symbol = symbols[i];
         let fullExecHistory;
@@ -163,14 +190,12 @@ export async function populateExecs(userId) {
             count: 500,
             reverse: true,
           });
-          console.log("HERE1");
 
           // console.log(userNums);
           // let oneHrBack: any = newDate(1);
           let datesList = await genDatesList();
           console.log(datesList);
           var theEye = 0; //  set your counter to 1
-          console.log("STARTING");
           let ending = await myLoop(
             datesList,
             userNums,
@@ -181,16 +206,14 @@ export async function populateExecs(userId) {
             symbol
           );
           console.log(ending);
-          console.log("REAL END");
+          console.log("ENDDOO");
           resolve(ending);
         } catch (err) {
           // console.log(fullExecHistory);
-          console.log("HERE2");
           resolve(false);
         }
       }
     } catch (err) {
-      console.log("ERRING");
       console.log(err);
     }
   });
@@ -237,13 +260,13 @@ function myLoop(
               console.log("THE END");
               await newconn.close();
               console.log("RESOLVING");
-              resolve(true);
+              // resolve(true);
             }
           } catch (err) {
             console.log("IN ERR");
             resolve(true);
           } finally {
-            console.log("IN FINALLY");
+            console.log("IN FINALLY", i.toString());
             resolve(true);
           }
         })
