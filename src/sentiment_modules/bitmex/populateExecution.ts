@@ -32,6 +32,8 @@ export async function populateExecs(userId) {
 
           let datesList = await genDatesList();
           var theEye = 0; //  set your counter to 1
+
+          //START LOOPING
           let ending = await myLoop(
             datesList,
             userNums,
@@ -43,8 +45,77 @@ export async function populateExecs(userId) {
           );
           console.log(ending);
           console.log("ENDDOO");
-          resolve(ending);
+          const tradeRepo = newconn.getRepository(Trade);
+          let findings = await tradeRepo.find({
+            select: [
+              "id",
+              "trdEnd",
+              "trdStart",
+              "execType",
+              "leavesQty",
+              "orderQty",
+              "side",
+              "currentQty",
+            ],
+            where: { userId: userNums[0].id, symbol: symbol },
+            order: {
+              timestamp: "ASC",
+              searchTimestamp: "ASC",
+              tradeNum: "DESC",
+            },
+          });
+          console.log(findings.length, " << found this many findings");
+
+          if (findings[0]) {
+            let torf = false;
+            for (let k = 0; k < findings.length; k++) {
+              // check if first trade is trdStart
+              if (k == 0) {
+                // findings[0].trdStart = true;
+                // findings[0].trdEnd = true;
+                // await tradeRepo.save(findings[0]);
+                console.log("<<<<<<<<<<");
+                console.log("I IS OOONNNE");
+                console.log("<<<<<<<<<<");
+                let realOrder: number;
+                if (findings[0].side == "Sell") {
+                  realOrder =
+                    (findings[0].orderQty - findings[0].leavesQty) * -1;
+                } else {
+                  realOrder = findings[0].orderQty - findings[0].leavesQty;
+                }
+                if (findings[0].currentQty == realOrder) {
+                  findings[0].trdStart = true;
+                  await tradeRepo.save(findings[0]);
+                }
+              }
+
+              if (torf == true) {
+                console.log("TORF IS TRUE");
+                findings[k].trdStart = true;
+                if (findings[k].execType == "Funding") {
+                  findings[k].trdEnd = false;
+                  findings[k].trdStart = false;
+                  await tradeRepo.save(findings[k]);
+                } else {
+                  await tradeRepo.save(findings[k]);
+                }
+                torf = false;
+              }
+
+              if (findings[k].trdEnd == true && findings[k].trdStart !== true) {
+                torf = true;
+              }
+              if (k == findings.length - 1) {
+                console.log("ENDING BITCH");
+                await newconn.close();
+                resolve(ending);
+              }
+            }
+          }
+          // resolve(ending);
         } catch (err) {
+          await newconn.close();
           resolve(false);
         }
       }
@@ -66,18 +137,18 @@ function myLoop(
   let end = new Promise(async (resolve) => {
     setTimeout(async function () {
       // console.log(i);
-      let rand = makeid(10);
-      let newconnect = await createConn(rand);
+      // let rand = makeid(10);
+      // let newconnect = await createConn(rand);
       fetchHistory(
         userNums[0].id,
-        newconnect,
+        newconn,
         symbol,
         datesList[i],
         fullExecHistory,
         bitmex
       )
         .then(async () => {
-          await newconnect.close();
+          // await newconnect.close();
           try {
             if (i < datesList.length - 1) {
               i++;
@@ -93,9 +164,8 @@ function myLoop(
               );
             } else {
               console.log("THE END");
-              await newconn.close();
+              // await newconn.close();
               console.log("RESOLVING");
-              // resolve(true);
             }
           } catch (err) {
             console.log("IN ERR");
@@ -122,7 +192,7 @@ function myLoop(
             );
           } else {
             console.log("THE END");
-            await newconn.close();
+            // await newconn.close();
             console.log("RESOLVING");
             resolve(true);
           }
@@ -153,26 +223,22 @@ export async function fetchHistory(
       const thisUser = await userRepo.find({
         where: { id: parseInt(userNum), select: "id" },
       });
-      // console.log(thisUser[0]);
       let j = 0;
-      console.log(executionHistory.length, "LENGTH");
+
       if (executionHistory.length == 0) {
         resolve(false);
       }
 
-      // if (fullExecHistory[0] && executionHistory[0]) {
       for (let i = 0; i < executionHistory.length; i++) {
         createOrderObj(userNum, executionHistory[i]).then(
           async (orderObject) => {
-            // console.log(orderObject);
-
             let newTrade = new Trade();
             newTrade.tradeNum = i;
             newTrade.searchTimestamp = history;
 
             //get execution history records
             newTrade.price = orderObject.price;
-            // console.log(fullExecHistory.length);
+
             for (let k = 0; k < fullExecHistory.length; k++) {
               if (
                 fullExecHistory[k].execID == orderObject.execID &&
@@ -204,52 +270,10 @@ export async function fetchHistory(
                   .save(newTrade)
                   .then(async (r) => {
                     j++;
-                    // console.log(j);
-                    // console.log("successfully saved trade " + i.toString());
                     if (j == executionHistory.length - 1) {
-                      // console.log(executionHistory.length);
-                      let findings = await tradeRepo.find({
-                        select: ["id", "trdEnd", "trdStart", "execType"],
-                        where: { userId: parseInt(userNum), symbol: symbol },
-                        order: {
-                          timestamp: "ASC",
-                          searchTimestamp: "ASC",
-                          tradeNum: "DESC",
-                        },
-                      });
-                      // if(findings[0].side ==)
-                      if (findings[0]) {
-                        // console.log(findings.length);
-                        let torf = false;
-                        for (let i = 0; i < findings.length; i++) {
-                          if (torf == true) {
-                            findings[i].trdStart = true;
-                            if (findings[i].execType == "Funding") {
-                              // console.log(findings[i].id, findings[i].execType);
-                              // console.log(findings[i]);
-                              findings[i].trdEnd = false;
-                              findings[i].trdStart = false;
-                              await tradeRepo.save(findings[i]);
-                            } else {
-                              await tradeRepo.save(findings[i]);
-                            }
-                            torf = false;
-                          }
-
-                          if (
-                            findings[i].trdEnd == true &&
-                            findings[i].trdStart !== true
-                          ) {
-                            torf = true;
-                          }
-                          if (i == findings.length - 1) {
-                            console.log("ENDING BITCH");
-                            await resolve(r);
-                          }
-                        }
-                      }
+                      console.log("saved this many trades>>", j + 1);
+                      await resolve(r);
                     }
-                    // console.log(r);
                   })
                   .catch((err) => console.log(err));
               }
@@ -257,35 +281,8 @@ export async function fetchHistory(
           }
         );
       }
-      // }
     } catch (err) {
       resolve(err);
     }
   });
 }
-
-// if (i == 0) {
-// findings[0].trdStart = true;
-// findings[0].trdEnd = true;
-// await tradeRepo.save(findings[0]);
-// console.log("<<<<<<<<<<");
-// console.log("<<<<<<<<<<");
-// console.log("I IS OOONNNE");
-// console.log("<<<<<<<<<<");
-// console.log("<<<<<<<<<<");
-// let realOrder: number;
-// if (findings[0].side == "Sell") {
-//   realOrder =
-//     (parseInt(findings[0].orderQty) -
-//       parseInt(findings[0].leavesQty)) *
-//     -1;
-// } else {
-//   realOrder =
-//     parseInt(findings[0].orderQty) -
-//     parseInt(findings[0].leavesQty);
-// }
-// if (parseInt(findings[0].currentQty) == realOrder) {
-//   findings[0].trdStart = true;
-//   await tradeRepo.save(findings[0]);
-// }
-// }
