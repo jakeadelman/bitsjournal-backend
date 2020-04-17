@@ -19,7 +19,7 @@ export async function populateExecs(userId) {
         apiKeySecret: userNums[0].apiKeySecret,
       });
 
-      let symbols = ["XBTUSD"];
+      let symbols = ["XBTUSD", "XBTH20"];
       for (let i = 0; i < symbols.length; i++) {
         let symbol = symbols[i];
         let fullExecHistory;
@@ -71,9 +71,6 @@ export async function populateExecs(userId) {
             for (let k = 0; k < findings.length; k++) {
               // check if first trade is trdStart
               if (k == 0) {
-                // findings[0].trdStart = true;
-                // findings[0].trdEnd = true;
-                // await tradeRepo.save(findings[0]);
                 console.log("<<<<<<<<<<");
                 console.log("I IS OOONNNE");
                 console.log("<<<<<<<<<<");
@@ -108,12 +105,18 @@ export async function populateExecs(userId) {
               }
               if (k == findings.length - 1) {
                 console.log("ENDING BITCH");
-                await newconn.close();
-                resolve(ending);
+                if (i == symbols.length - 1) {
+                  await newconn.close();
+                  resolve(true);
+                }
               }
             }
+          } else {
+            if (i == symbols.length - 1) {
+              await newconn.close();
+              resolve(true);
+            }
           }
-          // resolve(ending);
         } catch (err) {
           await newconn.close();
           resolve(false);
@@ -136,9 +139,6 @@ function myLoop(
 ): Promise<any> {
   let end = new Promise(async (resolve) => {
     setTimeout(async function () {
-      // console.log(i);
-      // let rand = makeid(10);
-      // let newconnect = await createConn(rand);
       fetchHistory(
         userNums[0].id,
         newconn,
@@ -148,7 +148,6 @@ function myLoop(
         bitmex
       )
         .then(async () => {
-          // await newconnect.close();
           try {
             if (i < datesList.length - 1) {
               i++;
@@ -164,7 +163,6 @@ function myLoop(
               );
             } else {
               console.log("THE END");
-              // await newconn.close();
               console.log("RESOLVING");
             }
           } catch (err) {
@@ -192,7 +190,6 @@ function myLoop(
             );
           } else {
             console.log("THE END");
-            // await newconn.close();
             console.log("RESOLVING");
             resolve(true);
           }
