@@ -45,78 +45,14 @@ export async function populateExecs(userId) {
           );
           console.log(ending);
           console.log("ENDDOO");
-          const tradeRepo = newconn.getRepository(Trade);
-          let findings = await tradeRepo.find({
-            select: [
-              "id",
-              "trdEnd",
-              "trdStart",
-              "execType",
-              "leavesQty",
-              "orderQty",
-              "side",
-              "currentQty",
-            ],
-            where: { userId: userNums[0].id, symbol: symbol },
-            order: {
-              timestamp: "ASC",
-              searchTimestamp: "ASC",
-              tradeNum: "DESC",
-            },
-          });
-          console.log(findings.length, " << found this many findings");
 
-          if (findings[0]) {
-            let torf = false;
-            for (let k = 0; k < findings.length; k++) {
-              // check if first trade is trdStart
-              if (k == 0) {
-                console.log("<<<<<<<<<<");
-                console.log("I IS OOONNNE");
-                console.log("<<<<<<<<<<");
-                let realOrder: number;
-                if (findings[0].side == "Sell") {
-                  realOrder =
-                    (findings[0].orderQty - findings[0].leavesQty) * -1;
-                } else {
-                  realOrder = findings[0].orderQty - findings[0].leavesQty;
-                }
-                if (findings[0].currentQty == realOrder) {
-                  findings[0].trdStart = true;
-                  await tradeRepo.save(findings[0]);
-                }
-              }
-
-              if (torf == true) {
-                console.log("TORF IS TRUE");
-                findings[k].trdStart = true;
-                if (findings[k].execType == "Funding") {
-                  findings[k].trdEnd = false;
-                  findings[k].trdStart = false;
-                  await tradeRepo.save(findings[k]);
-                } else {
-                  await tradeRepo.save(findings[k]);
-                }
-                torf = false;
-              }
-
-              if (findings[k].trdEnd == true && findings[k].trdStart !== true) {
-                torf = true;
-              }
-              if (k == findings.length - 1) {
-                console.log("ENDING BITCH");
-                if (i == symbols.length - 1) {
-                  await newconn.close();
-                  resolve(true);
-                }
-              }
-            }
-          } else {
+          // add start and end to trades
+          addStartEnd(userNums[0], symbol, newconn, true).then(async () => {
             if (i == symbols.length - 1) {
               await newconn.close();
               resolve(true);
             }
-          }
+          });
         } catch (err) {
           await newconn.close();
           resolve(false);
@@ -280,6 +216,91 @@ export async function fetchHistory(
       }
     } catch (err) {
       resolve(err);
+    }
+  });
+}
+
+export function addStartEnd(
+  userNum,
+  symbol,
+  newconn,
+  checkFirstTrade: boolean
+) {
+  return new Promise(async (resolve) => {
+    const tradeRepo = newconn.getRepository(Trade);
+    let findings = await tradeRepo.find({
+      select: [
+        "id",
+        "trdEnd",
+        "trdStart",
+        "execType",
+        "leavesQty",
+        "orderQty",
+        "side",
+        "currentQty",
+      ],
+      where: { userId: userNum.id, symbol: symbol },
+      order: {
+        timestamp: "ASC",
+        searchTimestamp: "ASC",
+        tradeNum: "DESC",
+      },
+    });
+    console.log(findings.length, " << found this many findings");
+
+    if (findings[0]) {
+      let torf = false;
+      for (let k = 0; k < findings.length; k++) {
+        // check if first trade is trdStart
+        if (checkFirstTrade == true) {
+          if (k == 0) {
+            console.log("<<<<<<<<<<");
+            console.log("I IS OOONNNE");
+            console.log("<<<<<<<<<<");
+            let realOrder: number;
+            if (findings[0].side == "Sell") {
+              realOrder = (findings[0].orderQty - findings[0].leavesQty) * -1;
+            } else {
+              realOrder = findings[0].orderQty - findings[0].leavesQty;
+            }
+            if (findings[0].currentQty == realOrder) {
+              findings[0].trdStart = true;
+              await tradeRepo.save(findings[0]);
+            }
+          }
+        }
+
+        if (torf == true) {
+          console.log("TORF IS TRUE");
+          findings[k].trdStart = true;
+          if (findings[k].execType == "Funding") {
+            findings[k].trdEnd = false;
+            findings[k].trdStart = false;
+            await tradeRepo.save(findings[k]);
+          } else {
+            await tradeRepo.save(findings[k]);
+          }
+          torf = false;
+        }
+
+        if (findings[k].trdEnd == true && findings[k].trdStart !== true) {
+          torf = true;
+        }
+        if (k == findings.length - 1) {
+          // console.log("ENDING BITCH");
+          // if (i == symbols.length - 1) {
+          //   await newconn.close();
+          //   resolve(true);
+          // }
+          resolve(true);
+        }
+      }
+    } else {
+      resolve(false);
+      // if (i == symbols.length - 1) {
+      //   await newconn.close();
+      //   resolve(true);
+      // }
     }
   });
 }
