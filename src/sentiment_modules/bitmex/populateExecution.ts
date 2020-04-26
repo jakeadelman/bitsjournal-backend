@@ -19,7 +19,7 @@ export async function populateExecs(userId) {
         apiKeySecret: userNums[0].apiKeySecret,
       });
 
-      let symbols = ["XBTUSD", "XBTU20"];
+      let symbols = ["XBTUSD", "XBTU20", "XBTM20", "ETHUSD", "XRPUSD"];
       for (let i = 0; i < symbols.length; i++) {
         let symbol = symbols[i];
         let fullExecHistory;
@@ -32,9 +32,10 @@ export async function populateExecs(userId) {
 
           let datesList = await genDatesList();
           var theEye = 0; //  set your counter to 1
+          console.log(datesList);
 
           //START LOOPING
-          let ending = await myLoop(
+          await myLoop(
             datesList,
             userNums,
             newconn,
@@ -43,8 +44,6 @@ export async function populateExecs(userId) {
             bitmex,
             symbol
           );
-          console.log(ending);
-          console.log("ENDDOO");
 
           // add start and end to trades
           addStartEnd(userNums[0], symbol, newconn, true).then(async () => {

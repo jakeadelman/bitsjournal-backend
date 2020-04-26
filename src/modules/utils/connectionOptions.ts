@@ -7,17 +7,17 @@ export const createConn = (name: string): Promise<Connection> => {
         name: name,
         type: "postgres",
         host: "bitsjournal-db-do-user-3307088-0.a.db.ondigitalocean.com",
-        port: 25060,
+        port: 25061,
         username: "doadmin",
         password: "xndvas26gehlgnn2",
-        database: "defaultdb",
+        database: "newpool",
         ssl: { rejectUnauthorized: false },
         logging: false,
         entities: [
           __dirname + "/../../entity/*.*",
           __dirname + "/../../entity/instagram/*.*",
-          __dirname + "/../../entity/sentiment/*.*"
-        ]
+          __dirname + "/../../entity/sentiment/*.*",
+        ],
       });
       console.log(`created connection ${name}`);
       resolve(connection);
@@ -34,8 +34,8 @@ export const createConn = (name: string): Promise<Connection> => {
         entities: [
           __dirname + "/../../entity/*.*",
           __dirname + "/../../entity/instagram/*.*",
-          __dirname + "/../../entity/sentiment/*.*"
-        ]
+          __dirname + "/../../entity/sentiment/*.*",
+        ],
       });
       console.log(`created connection ${name}`);
       resolve(connection);
@@ -52,34 +52,34 @@ export const createConns = (name: string): Promise<Connection[]> => {
           name: `${name}1`,
           type: "postgres",
           host: "bitsjournal-db-do-user-3307088-0.a.db.ondigitalocean.com",
-          port: 25060,
+          port: 25061,
           username: "doadmin",
           password: "xndvas26gehlgnn2",
-          database: "defaultdb",
+          database: "newpool",
           ssl: { rejectUnauthorized: false },
           logging: false,
           entities: [
             __dirname + "/../../entity/*.*",
             __dirname + "/../../entity/instagram/*.*",
-            __dirname + "/../../entity/sentiment/*.*"
-          ]
+            __dirname + "/../../entity/sentiment/*.*",
+          ],
         },
         {
           name: `${name}2`,
           type: "postgres",
           host: "bitsjournal-db-do-user-3307088-0.a.db.ondigitalocean.com",
-          port: 25060,
+          port: 25061,
           username: "doadmin",
           password: "xndvas26gehlgnn2",
-          database: "defaultdb",
+          database: "newpool",
           ssl: { rejectUnauthorized: false },
           logging: false,
           entities: [
             __dirname + "/../../entity/*.*",
             __dirname + "/../../entity/instagram/*.*",
-            __dirname + "/../../entity/sentiment/*.*"
-          ]
-        }
+            __dirname + "/../../entity/sentiment/*.*",
+          ],
+        },
       ]);
       console.log(`created connections ${name}1 and ${name}2`);
       resolve(connections);
@@ -97,8 +97,8 @@ export const createConns = (name: string): Promise<Connection[]> => {
           entities: [
             __dirname + "/../../entity/*.*",
             __dirname + "/../../entity/instagram/*.*",
-            __dirname + "/../../entity/sentiment/*.*"
-          ]
+            __dirname + "/../../entity/sentiment/*.*",
+          ],
         },
         {
           name: `${name}2`,
@@ -112,9 +112,9 @@ export const createConns = (name: string): Promise<Connection[]> => {
           entities: [
             __dirname + "/../../entity/*.*",
             __dirname + "/../../entity/instagram/*.*",
-            __dirname + "/../../entity/sentiment/*.*"
-          ]
-        }
+            __dirname + "/../../entity/sentiment/*.*",
+          ],
+        },
       ]);
       console.log(`created connections ${name}1 and ${name}2`);
       resolve(connections);
