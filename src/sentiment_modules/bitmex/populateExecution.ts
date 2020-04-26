@@ -19,7 +19,7 @@ export async function populateExecs(userId) {
         apiKeySecret: userNums[0].apiKeySecret,
       });
 
-      let symbols = ["XBTUSD", "XBTH20"];
+      let symbols = ["XBTUSD", "XBTU20"];
       for (let i = 0; i < symbols.length; i++) {
         let symbol = symbols[i];
         let fullExecHistory;
@@ -75,6 +75,7 @@ function myLoop(
 ): Promise<any> {
   let end = new Promise(async (resolve) => {
     setTimeout(async function () {
+      console.log("starting my loop");
       fetchHistory(
         userNums[0].id,
         newconn,
@@ -144,11 +145,13 @@ export async function fetchHistory(
   bitmex
 ) {
   return new Promise(async (resolve: any) => {
+    console.log("starting fetch history");
     try {
+      console.log("starting try in fetch history");
       const executionHistory = await bitmex.User.getExecutionHistory({
         symbol: symbol,
         timestamp: history,
-      });
+      }).catch((err) => console.log(err));
 
       const userRepo = conn.getRepository(User);
       const tradeRepo = conn.getRepository(Trade);
@@ -161,10 +164,13 @@ export async function fetchHistory(
       if (executionHistory.length == 0) {
         resolve(false);
       }
+      console.log("just fetched exec");
 
       for (let i = 0; i < executionHistory.length; i++) {
+        console.log(i.toString() + "this one");
         createOrderObj(userNum, executionHistory[i]).then(
           async (orderObject) => {
+            console.log("created order obj");
             let newTrade = new Trade();
             newTrade.tradeNum = i;
             newTrade.searchTimestamp = history;
@@ -199,13 +205,15 @@ export async function fetchHistory(
                 newTrade.notes = "undefined";
                 newTrade.hashtags = "undefined";
 
+                //save trade
                 tradeRepo
                   .save(newTrade)
                   .then(async (r) => {
-                    j++;
                     if (j == executionHistory.length - 1) {
                       console.log("saved this many trades>>", j + 1);
                       await resolve(r);
+                    } else {
+                      j++;
                     }
                   })
                   .catch((err) => console.log(err));
@@ -215,6 +223,8 @@ export async function fetchHistory(
         );
       }
     } catch (err) {
+      console.log("there was an err");
+      console.log(err);
       resolve(err);
     }
   });
@@ -287,20 +297,11 @@ export function addStartEnd(
           torf = true;
         }
         if (k == findings.length - 1) {
-          // console.log("ENDING BITCH");
-          // if (i == symbols.length - 1) {
-          //   await newconn.close();
-          //   resolve(true);
-          // }
           resolve(true);
         }
       }
     } else {
       resolve(false);
-      // if (i == symbols.length - 1) {
-      //   await newconn.close();
-      //   resolve(true);
-      // }
     }
   });
 }

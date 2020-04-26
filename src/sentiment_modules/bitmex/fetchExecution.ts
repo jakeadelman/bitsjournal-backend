@@ -30,7 +30,6 @@ setInterval(async function () {
           count: 100,
           reverse: true,
         });
-        console.log(fullExecHistory[0]);
         let utcTime: any = newDate(0);
 
         fetchHistory(
@@ -57,7 +56,7 @@ setInterval(async function () {
       }
     }
   }
-}, 60000);
+}, 60000 * 5);
 
 // import { BitmexAPI } from "bitmex-node";
 // import { User } from "../../entity/User";
