@@ -19,7 +19,7 @@ export async function populateExecs(userId) {
         apiKeySecret: userNums[0].apiKeySecret,
       });
 
-      let symbols = ["XBTUSD"];
+      let symbols = ["XBTUSD", "XBTU20"];
       for (let i = 0; i < symbols.length; i++) {
         let symbol = symbols[i];
         let fullExecHistory;
@@ -45,75 +45,14 @@ export async function populateExecs(userId) {
           );
           console.log(ending);
           console.log("ENDDOO");
-          const tradeRepo = newconn.getRepository(Trade);
-          let findings = await tradeRepo.find({
-            select: [
-              "id",
-              "trdEnd",
-              "trdStart",
-              "execType",
-              "leavesQty",
-              "orderQty",
-              "side",
-              "currentQty",
-            ],
-            where: { userId: userNums[0].id, symbol: symbol },
-            order: {
-              timestamp: "ASC",
-              searchTimestamp: "ASC",
-              tradeNum: "DESC",
-            },
-          });
-          console.log(findings.length, " << found this many findings");
 
-          if (findings[0]) {
-            let torf = false;
-            for (let k = 0; k < findings.length; k++) {
-              // check if first trade is trdStart
-              if (k == 0) {
-                // findings[0].trdStart = true;
-                // findings[0].trdEnd = true;
-                // await tradeRepo.save(findings[0]);
-                console.log("<<<<<<<<<<");
-                console.log("I IS OOONNNE");
-                console.log("<<<<<<<<<<");
-                let realOrder: number;
-                if (findings[0].side == "Sell") {
-                  realOrder =
-                    (findings[0].orderQty - findings[0].leavesQty) * -1;
-                } else {
-                  realOrder = findings[0].orderQty - findings[0].leavesQty;
-                }
-                if (findings[0].currentQty == realOrder) {
-                  findings[0].trdStart = true;
-                  await tradeRepo.save(findings[0]);
-                }
-              }
-
-              if (torf == true) {
-                console.log("TORF IS TRUE");
-                findings[k].trdStart = true;
-                if (findings[k].execType == "Funding") {
-                  findings[k].trdEnd = false;
-                  findings[k].trdStart = false;
-                  await tradeRepo.save(findings[k]);
-                } else {
-                  await tradeRepo.save(findings[k]);
-                }
-                torf = false;
-              }
-
-              if (findings[k].trdEnd == true && findings[k].trdStart !== true) {
-                torf = true;
-              }
-              if (k == findings.length - 1) {
-                console.log("ENDING BITCH");
-                await newconn.close();
-                resolve(ending);
-              }
+          // add start and end to trades
+          addStartEnd(userNums[0], symbol, newconn, true).then(async () => {
+            if (i == symbols.length - 1) {
+              await newconn.close();
+              resolve(true);
             }
-          }
-          // resolve(ending);
+          });
         } catch (err) {
           await newconn.close();
           resolve(false);
@@ -136,9 +75,7 @@ function myLoop(
 ): Promise<any> {
   let end = new Promise(async (resolve) => {
     setTimeout(async function () {
-      // console.log(i);
-      // let rand = makeid(10);
-      // let newconnect = await createConn(rand);
+      console.log("starting my loop");
       fetchHistory(
         userNums[0].id,
         newconn,
@@ -148,7 +85,6 @@ function myLoop(
         bitmex
       )
         .then(async () => {
-          // await newconnect.close();
           try {
             if (i < datesList.length - 1) {
               i++;
@@ -164,7 +100,6 @@ function myLoop(
               );
             } else {
               console.log("THE END");
-              // await newconn.close();
               console.log("RESOLVING");
             }
           } catch (err) {
@@ -192,7 +127,6 @@ function myLoop(
             );
           } else {
             console.log("THE END");
-            // await newconn.close();
             console.log("RESOLVING");
             resolve(true);
           }
@@ -211,11 +145,13 @@ export async function fetchHistory(
   bitmex
 ) {
   return new Promise(async (resolve: any) => {
+    console.log("starting fetch history");
     try {
+      console.log("starting try in fetch history");
       const executionHistory = await bitmex.User.getExecutionHistory({
         symbol: symbol,
         timestamp: history,
-      });
+      }).catch((err) => console.log(err));
 
       const userRepo = conn.getRepository(User);
       const tradeRepo = conn.getRepository(Trade);
@@ -228,10 +164,13 @@ export async function fetchHistory(
       if (executionHistory.length == 0) {
         resolve(false);
       }
+      console.log("just fetched exec");
 
       for (let i = 0; i < executionHistory.length; i++) {
+        console.log(i.toString() + "this one");
         createOrderObj(userNum, executionHistory[i]).then(
           async (orderObject) => {
+            console.log("created order obj");
             let newTrade = new Trade();
             newTrade.tradeNum = i;
             newTrade.searchTimestamp = history;
@@ -266,13 +205,15 @@ export async function fetchHistory(
                 newTrade.notes = "undefined";
                 newTrade.hashtags = "undefined";
 
+                //save trade
                 tradeRepo
                   .save(newTrade)
                   .then(async (r) => {
-                    j++;
                     if (j == executionHistory.length - 1) {
                       console.log("saved this many trades>>", j + 1);
                       await resolve(r);
+                    } else {
+                      j++;
                     }
                   })
                   .catch((err) => console.log(err));
@@ -282,7 +223,85 @@ export async function fetchHistory(
         );
       }
     } catch (err) {
+      console.log("there was an err");
+      console.log(err);
       resolve(err);
+    }
+  });
+}
+
+export function addStartEnd(
+  userNum,
+  symbol,
+  newconn,
+  checkFirstTrade: boolean
+) {
+  return new Promise(async (resolve) => {
+    const tradeRepo = newconn.getRepository(Trade);
+    let findings = await tradeRepo.find({
+      select: [
+        "id",
+        "trdEnd",
+        "trdStart",
+        "execType",
+        "leavesQty",
+        "orderQty",
+        "side",
+        "currentQty",
+      ],
+      where: { userId: userNum.id, symbol: symbol },
+      order: {
+        timestamp: "ASC",
+        searchTimestamp: "ASC",
+        tradeNum: "DESC",
+      },
+    });
+    console.log(findings.length, " << found this many findings");
+
+    if (findings[0]) {
+      let torf = false;
+      for (let k = 0; k < findings.length; k++) {
+        // check if first trade is trdStart
+        if (checkFirstTrade == true) {
+          if (k == 0) {
+            console.log("<<<<<<<<<<");
+            console.log("I IS OOONNNE");
+            console.log("<<<<<<<<<<");
+            let realOrder: number;
+            if (findings[0].side == "Sell") {
+              realOrder = (findings[0].orderQty - findings[0].leavesQty) * -1;
+            } else {
+              realOrder = findings[0].orderQty - findings[0].leavesQty;
+            }
+            if (findings[0].currentQty == realOrder) {
+              findings[0].trdStart = true;
+              await tradeRepo.save(findings[0]);
+            }
+          }
+        }
+
+        if (torf == true) {
+          console.log("TORF IS TRUE");
+          findings[k].trdStart = true;
+          if (findings[k].execType == "Funding") {
+            findings[k].trdEnd = false;
+            findings[k].trdStart = false;
+            await tradeRepo.save(findings[k]);
+          } else {
+            await tradeRepo.save(findings[k]);
+          }
+          torf = false;
+        }
+
+        if (findings[k].trdEnd == true && findings[k].trdStart !== true) {
+          torf = true;
+        }
+        if (k == findings.length - 1) {
+          resolve(true);
+        }
+      }
+    } else {
+      resolve(false);
     }
   });
 }

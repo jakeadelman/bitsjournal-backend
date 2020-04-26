@@ -146,7 +146,7 @@ export function newTwelveHourDate(hrsBack: number) {
 
 export async function genDatesList(): Promise<any> {
   return new Promise(async (resolve) => {
-    let daysBack = 10;
+    let daysBack = 15;
     let arr: string[] = [];
     for (let i = 0; i < daysBack; i++) {
       let num = 24 * i;
