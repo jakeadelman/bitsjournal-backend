@@ -129,19 +129,15 @@ export function newDate(hrsBack: number) {
 }
 
 export function newTwelveHourDate(hrsBack: number) {
-  if (hrsBack == 0) {
-    let dt: any = new Date(new Date().toUTCString());
-    dt.setHours(7, 0, 0, 0);
-    dt = dt.toISOString();
-    return dt;
+  let dt: any = new Date(new Date().toUTCString());
+  dt.setHours(dt.getHours() - hrsBack);
+  if (process.env.NODE_ENV! === "production") {
+    dt.setHours(12, 0, 0, 0);
   } else {
-    let dt: any = new Date(new Date().toUTCString());
-    dt.setHours(dt.getHours() - hrsBack);
     dt.setHours(7, 0, 0, 0);
-    dt = dt.toISOString();
-    return dt;
   }
-  // console.log(dt);
+  dt = dt.toISOString();
+  return dt;
 }
 
 export async function genDatesList(): Promise<any> {
