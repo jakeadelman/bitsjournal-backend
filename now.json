@@ -3,13 +3,7 @@
   "builds": [
     {
       "src": "src/index.ts",
-      "use": "@now/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/graphql"
+      "use": "@now/node@canary"
     }
   ]
 }
