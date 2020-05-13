@@ -65,7 +65,7 @@
     "typescript": "^3.2.4"
   },
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "NODE_ENV=production ts-node src/index.ts",
     "test": "ts-node-dev src/sentiment_modules/bitmex/test.ts",
     "populate-execution": "ts-node-dev src/sentiment_modules/bitmex/populateExecution.ts",
     "populate-trades": "ts-node-dev src/sentiment_modules/bitmex/trades/populateTrades.ts",
