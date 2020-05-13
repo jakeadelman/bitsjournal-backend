@@ -8,8 +8,6 @@ import connectRedis from "connect-redis";
 import { redis } from "./src/redis";
 import cors from "cors";
 import { resolverArray } from "./src/resolvers";
-//rando
-//
 
 const main = async () => {
   await createConnection();
