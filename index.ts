@@ -5,9 +5,9 @@ import { buildSchema, formatArgumentValidationError } from "type-graphql";
 import { createConnection } from "typeorm";
 import session from "express-session";
 import connectRedis from "connect-redis";
-import { redis } from "./redis";
+import { redis } from "./src/redis";
 import cors from "cors";
-import { resolverArray } from "./resolvers";
+import { resolverArray } from "./src/resolvers";
 
 const main = async () => {
   await createConnection();
