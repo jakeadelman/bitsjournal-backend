@@ -1,4 +1,4 @@
-import { fetchTrades } from "./fetchTrades";
+import { fetchTrades } from "./trades/helpers";
 import { createConn } from "../../modules/utils/connectionOptions";
 
 async function hello() {

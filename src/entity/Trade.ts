@@ -24,7 +24,7 @@ export class Trade extends BaseEntity {
   symbol: string;
 
   @Field()
-  @Column()
+  @Column({ unique: true })
   execID: string;
 
   @Field()

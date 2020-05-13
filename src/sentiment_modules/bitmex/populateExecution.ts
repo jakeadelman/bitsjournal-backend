@@ -163,7 +163,6 @@ export async function fetchHistory(
       if (executionHistory.length == 0) {
         resolve(false);
       }
-      console.log("just fetched exec");
 
       for (let i = 0; i < executionHistory.length; i++) {
         console.log(i.toString() + "this one");

@@ -16,7 +16,7 @@ const main = async () => {
     resolvers: resolverArray,
     authChecker: ({ context: { req } }) => {
       return !!req.session.userId;
-    }
+    },
   });
 
   const apolloServer = new ApolloServer({
@@ -24,7 +24,7 @@ const main = async () => {
     introspection: true,
     playground: true,
     formatError: formatArgumentValidationError,
-    context: ({ req }: any) => ({ req })
+    context: ({ req }: any) => ({ req }),
   });
 
   const app = Express();
@@ -38,14 +38,14 @@ const main = async () => {
         "http://localhost:3000",
         "https://socialslant.io",
         "https://bitsjournal.io",
-        "https://bitsjournal-frontend.now.sh"
-      ]
+        "https://bitsjournal-frontend.now.sh",
+      ],
     })
   );
   app.use(
     session({
       store: new RedisStore({
-        client: redis as any
+        client: redis as any,
       }),
       name: "qid",
       secret: "randomstring",
@@ -54,8 +54,8 @@ const main = async () => {
       cookie: {
         httpOnly: false,
         // secure: process.env.NODE_ENV === "production",
-        maxAge: 1000 * 60 * 60 * 24 * 7 * 365 // 7 years
-      }
+        maxAge: 1000 * 60 * 60 * 24 * 7 * 365, // 7 years
+      },
     })
   );
 
@@ -63,6 +63,16 @@ const main = async () => {
 
   app.listen(4000, () => {
     console.log(`server started on http://localhost:4000/graphql`);
+    try {
+      require("@dynatrace/oneagent")({
+        environmentid: "uma42277",
+        apitoken: "kvq4X7AyTbyXoQy0ESAPT",
+        // endpoint: "<endpoint url>", // specify endpoint url - not needed for SaaS customers
+      });
+      console.log("SUCCESS loading oneagent");
+    } catch (err) {
+      console.log("Failed to load OneAgent: " + err);
+    }
   });
 };
 
