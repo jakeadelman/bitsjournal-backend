@@ -7,7 +7,7 @@ import { getRepository } from "typeorm";
 // import { User } from "../../entity/User";
 import { Candle } from "../../entity/Candle";
 import { MyContext } from "../../types/MyContext";
-import { makeid } from "../../sentiment_modules/bitmex/bitmexHelpers";
+import { makeid } from "../../bitmex/bitmexHelpers";
 // import { MoreThanDate, LessThanDate } from "./helpers";
 
 @Resolver()
@@ -56,7 +56,7 @@ export class FiveMinuteCandleHistoryResolver {
         {
           timestamp: newStart.toISOString(),
           timestamptwo: newEnd.toISOString(),
-          timeframe: timeframe
+          timeframe: timeframe,
         }
       )
       .orderBy("candle.timestamp", "DESC")

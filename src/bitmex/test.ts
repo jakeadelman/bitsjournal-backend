@@ -1,5 +1,5 @@
 import { fetchTrades } from "./trades/helpers";
-import { createConn } from "../../modules/utils/connectionOptions";
+import { createConn } from "../modules/utils/connectionOptions";
 
 async function hello() {
   // let randId = makeid(10);

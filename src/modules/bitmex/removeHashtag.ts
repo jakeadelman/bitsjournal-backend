@@ -7,7 +7,7 @@ import { createConn } from "../utils/connectionOptions";
 import { User } from "../../entity/User";
 import { Trade } from "../../entity/Trade";
 import { MyContext } from "../../types/MyContext";
-import { makeid } from "../../sentiment_modules/bitmex/bitmexHelpers";
+import { makeid } from "../../bitmex/bitmexHelpers";
 // import { MoreThanDate, LessThanDate } from "./helpers";
 
 @Resolver()

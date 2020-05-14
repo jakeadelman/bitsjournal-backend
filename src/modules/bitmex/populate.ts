@@ -2,7 +2,7 @@ import { Resolver, Mutation, Ctx } from "type-graphql";
 // import { User } from "../../entity/User";
 import { MyContext } from "../../types/MyContext";
 import { createConn } from "../utils/connectionOptions";
-import { populateExecs } from "../../sentiment_modules/bitmex/populateExecution";
+import { populateExecs } from "../../bitmex/execution/populateExecution";
 
 @Resolver()
 export class PopulateResolver {

@@ -64,7 +64,7 @@
     "typescript": "^3.2.4"
   },
   "scripts": {
-    "start": "npx pm2 start pm2.yaml --no-daemon",
+    "start": "npx pm2 start ecosystem.config.js",
     "test-start": "node ./dist/index.js",
     "dev": "NODE_ENV=development ts-node-dev --respawn ./src/index.ts",
     "postinstall": "npx tsc",

@@ -1,5 +1,5 @@
 import { fetchTrades } from "./helpers";
-import { createConn } from "../../../modules/utils/connectionOptions";
+import { createConn } from "../../modules/utils/connectionOptions";
 
 // run once at start (from backend)
 

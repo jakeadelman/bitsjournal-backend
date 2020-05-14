@@ -1,8 +1,9 @@
 import { BitmexAPI } from "bitmex-node";
 import { User } from "../../entity/User";
 import { Trade } from "../../entity/Trade";
-import { createOrderObj, genDatesList, makeid } from "./bitmexHelpers";
+import { createOrderObj, genDatesList, makeid } from "../bitmexHelpers";
 import { createConn } from "../../modules/utils/connectionOptions";
+import { symbols } from "../symbols";
 
 export async function populateExecs(userId) {
   return new Promise<any>(async (resolve) => {
@@ -19,7 +20,7 @@ export async function populateExecs(userId) {
         apiKeySecret: userNums[0].apiKeySecret,
       });
 
-      let symbols = ["XBTUSD", "XBTU20", "XBTM20", "ETHUSD", "XRPUSD"];
+      // let symbols = ["XBTUSD", "XBTU20", "XBTM20", "ETHUSD", "XRPUSD"];
       for (let i = 0; i < symbols.length; i++) {
         let symbol = symbols[i];
         let fullExecHistory;
@@ -262,9 +263,9 @@ export function addStartEnd(
         // check if first trade is trdStart
         if (checkFirstTrade == true) {
           if (k == 0) {
-            console.log("<<<<<<<<<<");
-            console.log("I IS OOONNNE");
-            console.log("<<<<<<<<<<");
+            // console.log("<<<<<<<<<<");
+            // console.log("I IS OOONNNE");
+            // console.log("<<<<<<<<<<");
             let realOrder: number;
             if (findings[0].side == "Sell") {
               realOrder = (findings[0].orderQty - findings[0].leavesQty) * -1;
@@ -279,7 +280,7 @@ export function addStartEnd(
         }
 
         if (torf == true) {
-          console.log("TORF IS TRUE");
+          // console.log("TORF IS TRUE");
           findings[k].trdStart = true;
           if (findings[k].execType == "Funding") {
             findings[k].trdEnd = false;

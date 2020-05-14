@@ -7,7 +7,7 @@ import { createConn } from "../utils/connectionOptions";
 import { User } from "../../entity/User";
 // import { Trade } from "../../entity/Trade";
 import { MyContext } from "../../types/MyContext";
-import { makeid } from "../../sentiment_modules/bitmex/bitmexHelpers";
+import { makeid } from "../../bitmex/bitmexHelpers";
 // import { MoreThanDate, LessThanDate } from "./helpers";
 
 @Resolver()
@@ -24,7 +24,7 @@ export class CheckApiResolver {
     // let tradeRepo = connection.getRepository(Trade);
     let userRepo = connection.getRepository(User);
     let thisUser = await userRepo.find({
-      where: { id: ctx.req.session!.userId }
+      where: { id: ctx.req.session!.userId },
     });
     // console.log(start, end);
     console.log(thisUser[0]);

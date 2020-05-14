@@ -1,5 +1,5 @@
 import { BitmexAPI } from "bitmex-node";
-import { Candle } from "../../../entity/Candle";
+import { Candle } from "../../entity/Candle";
 // import { Trade } from "../../entity/Trade";
 // import { makeid } from "./bitmexHelpers";
 // import { createConn } from "../../modules/utils/connectionOptions";
