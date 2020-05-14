@@ -16,9 +16,9 @@ if (process.env.NODE_ENV === "production") {
     synchronize: true,
     logging: true,
     entities: [
-      "src/entity/*.*",
-      "src/entity/instagram/*.*",
-      "src/entity/sentiment/*.*",
+      "dist/entity/*.*",
+      "dist/entity/instagram/*.*",
+      "dist/entity/sentiment/*.*",
     ],
   };
 } else if (process.env.NODE_ENV === "development") {
