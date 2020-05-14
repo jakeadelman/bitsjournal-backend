@@ -26,7 +26,7 @@ module.exports = {
       path: "/root",
       ssh_options: ["ForwardAgent=yes"],
       "pre-deploy-local": "",
-      "post-deploy": "yarn && npx pm2 reload ecosystem.config.js",
+      "post-deploy": "npm install && pm2 reload ecosystem.config.js",
       "pre-setup": "",
     },
   },
