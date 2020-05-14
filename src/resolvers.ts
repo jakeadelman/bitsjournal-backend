@@ -11,7 +11,6 @@ import { HourSentimentResolver } from "./modules/tweet/hourlySentiment";
 import { AddCurrencyResolver } from "./modules/tweet/addCurrency";
 import { AddAdditionalTermResolver } from "./modules/tweet/addAdditionalTerm";
 import { AllCurrenciesResolver } from "./modules/tweet/allCurrencies";
-import { GoogleTrendsResolver } from "./modules/tweet/google_trends/gtrends";
 import { AddApiKeyResolver } from "./modules/bitmex/addApiKey";
 import { TradeHistoryResolver } from "./modules/bitmex/tradeHistory";
 import { FiveMinuteCandleHistoryResolver } from "./modules/bitmex/fiveMinuteCandles";
@@ -38,7 +37,6 @@ export const resolverArray = [
   AddAdditionalTermResolver,
   HourSentimentResolver,
   AllCurrenciesResolver,
-  GoogleTrendsResolver,
   AddApiKeyResolver,
   TradeHistoryResolver,
   PopulateResolver,

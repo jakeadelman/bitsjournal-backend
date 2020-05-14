@@ -13,7 +13,6 @@ const hourlySentiment_1 = require("./modules/tweet/hourlySentiment");
 const addCurrency_1 = require("./modules/tweet/addCurrency");
 const addAdditionalTerm_1 = require("./modules/tweet/addAdditionalTerm");
 const allCurrencies_1 = require("./modules/tweet/allCurrencies");
-const gtrends_1 = require("./modules/tweet/google_trends/gtrends");
 const addApiKey_1 = require("./modules/bitmex/addApiKey");
 const tradeHistory_1 = require("./modules/bitmex/tradeHistory");
 const fiveMinuteCandles_1 = require("./modules/bitmex/fiveMinuteCandles");
@@ -39,7 +38,6 @@ exports.resolverArray = [
     addAdditionalTerm_1.AddAdditionalTermResolver,
     hourlySentiment_1.HourSentimentResolver,
     allCurrencies_1.AllCurrenciesResolver,
-    gtrends_1.GoogleTrendsResolver,
     addApiKey_1.AddApiKeyResolver,
     tradeHistory_1.TradeHistoryResolver,
     populate_1.PopulateResolver,
