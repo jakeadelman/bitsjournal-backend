@@ -10,10 +10,14 @@
     "dev": "NODE_ENV=development ts-node-dev --respawn ./src/index.ts",
     "postinstall": "npx tsc",
     "test": "ts-node-dev src/sentiment_modules/bitmex/test.ts",
-    "populate-execution": "ts-node-dev src/sentiment_modules/bitmex/populateExecution.ts",
-    "populate-trades": "ts-node-dev src/sentiment_modules/bitmex/trades/populateTrades.ts",
-    "fetch-execution": "ts-node-dev src/sentiment_modules/bitmex/fetchExecution.ts",
-    "fetch-trades": "ts-node-dev src/sentiment_modules/bitmex/trades/fetchTrades.ts"
+    "populate-execution": "NODE_ENV=production ts-node-dev src/sentiment_modules/bitmex/populateExecution.ts",
+    "populate-trades": "NODE_ENV=production ts-node-dev src/sentiment_modules/bitmex/trades/populateTrades.ts",
+    "fetch-execution": "NODE_ENV=production ts-node-dev src/sentiment_modules/bitmex/fetchExecution.ts",
+    "fetch-trades": "NODE_ENV=production ts-node-dev src/sentiment_modules/bitmex/trades/fetchTrades.ts",
+    "populate-execution-dev": "NODE_ENV=development ts-node-dev src/sentiment_modules/bitmex/populateExecution.ts",
+    "populate-trades-dev": "NODE_ENV=development ts-node-dev src/sentiment_modules/bitmex/trades/populateTrades.ts",
+    "fetch-execution-dev": "NODE_ENV=development ts-node-dev src/sentiment_modules/bitmex/fetchExecution.ts",
+    "fetch-trades-dev": "NODE_ENV=development ts-node-dev src/sentiment_modules/bitmex/trades/fetchTrades.ts"
   },
   "dependencies": {
     "@babel/node": "^7.8.7",
