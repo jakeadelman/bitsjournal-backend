@@ -5,14 +5,32 @@ module.exports = {
       script: "./dist/index.js",
       instances: 4,
       exec_mode: "cluster",
+      env: {
+        NODE_ENV: "development",
+      },
+      env_production: {
+        NODE_ENV: "production",
+      },
     },
     {
       name: "fetch-trades",
       script: "./dist/bitmex/trades/fetchTrades.js",
+      env: {
+        NODE_ENV: "development",
+      },
+      env_production: {
+        NODE_ENV: "production",
+      },
     },
     {
       name: "fetch-execution",
       script: "./dist/bitmex/execution/fetchExecution.js",
+      env: {
+        NODE_ENV: "development",
+      },
+      env_production: {
+        NODE_ENV: "production",
+      },
     },
   ],
 
