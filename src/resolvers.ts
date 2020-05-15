@@ -14,6 +14,7 @@ import { AddHashtagResolver } from "./modules/bitmex/addHashtag";
 import { RemoveHashtagResolver } from "./modules/bitmex/removeHashtag";
 import { PopulateResolver } from "./modules/bitmex/populate";
 import { CheckApiResolver } from "./modules/bitmex/checkApiKey";
+import { LogoutResolver } from "./modules/user/Logout";
 
 export const resolverArray = [
   RegisterResolver,
@@ -32,4 +33,5 @@ export const resolverArray = [
   AddHashtagResolver,
   CheckApiResolver,
   RemoveHashtagResolver,
+  LogoutResolver,
 ];
