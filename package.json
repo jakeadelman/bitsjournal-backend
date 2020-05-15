@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "NODE_ENV=production npx pm2 start ecosystem.config.js",
-    "start-no-daemon": "NODE_ENV=production npx pm2 start ecosystem.config.js --no--daemon",
+    "start-no-daemon": "NODE_ENV=production npx pm2 start ecosystem.config.js --no-daemon",
     "test-start": "NODE_ENV=production node ./dist/index.js",
     "dev": "NODE_ENV=development ts-node-dev --respawn ./src/index.ts",
     "postinstall": "npx tsc",
