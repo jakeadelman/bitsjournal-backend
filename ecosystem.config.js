@@ -37,7 +37,7 @@ module.exports = {
   deploy: {
     production: {
       user: "root",
-      host: "138.197.167.123",
+      host: "138.197.158.34",
       ref: "origin/master",
       repo: "git@github.com:jakeadelman/bitsjournal-backend.git",
       // repo: "https://github.com/jakeadelman/bitsjournal-backend.git",
