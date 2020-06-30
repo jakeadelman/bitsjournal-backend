@@ -12,26 +12,26 @@ module.exports = {
         NODE_ENV: "production",
       },
     },
-    {
-      name: "fetch-trades",
-      script: "./dist/bitmex/trades/fetchTrades.js",
-      env: {
-        NODE_ENV: "development",
-      },
-      env_production: {
-        NODE_ENV: "production",
-      },
-    },
-    {
-      name: "fetch-execution",
-      script: "./dist/bitmex/execution/fetchExecution.js",
-      env: {
-        NODE_ENV: "development",
-      },
-      env_production: {
-        NODE_ENV: "production",
-      },
-    },
+    // {
+    //   name: "fetch-trades",
+    //   script: "./dist/bitmex/trades/fetchTrades.js",
+    //   env: {
+    //     NODE_ENV: "development",
+    //   },
+    //   env_production: {
+    //     NODE_ENV: "production",
+    //   },
+    // },
+    // {
+    //   name: "fetch-execution",
+    //   script: "./dist/bitmex/execution/fetchExecution.js",
+    //   env: {
+    //     NODE_ENV: "development",
+    //   },
+    //   env_production: {
+    //     NODE_ENV: "production",
+    //   },
+    // },
   ],
 
   deploy: {
