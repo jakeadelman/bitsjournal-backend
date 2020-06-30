@@ -13,7 +13,8 @@ export const createConn = (name: string): Promise<Connection> => {
         password: "n4g3a8kcay2rmu8c",
         database: "newpool",
         ssl: { rejectUnauthorized: false },
-        logging: false,
+        logging: true,
+        synchronize: false,
         entities: [
           __dirname + "/../../entity/*.*",
           __dirname + "/../../entity/instagram/*.*",
@@ -59,7 +60,8 @@ export const createConns = (name: string): Promise<Connection[]> => {
           password: "n4g3a8kcay2rmu8c",
           database: "newpool",
           ssl: { rejectUnauthorized: false },
-          logging: false,
+          logging: true,
+          synchronize: false,
           entities: [
             __dirname + "/../../entity/*.*",
             __dirname + "/../../entity/instagram/*.*",
@@ -75,8 +77,9 @@ export const createConns = (name: string): Promise<Connection[]> => {
           username: "doadmin",
           password: "n4g3a8kcay2rmu8c",
           database: "newpool",
+          synchronize: false,
           ssl: { rejectUnauthorized: false },
-          logging: false,
+          logging: true,
           entities: [
             __dirname + "/../../entity/*.*",
             __dirname + "/../../entity/instagram/*.*",

@@ -8,8 +8,8 @@ export const fetchTrades = async (binSize, symbol, count, conn) => {
   return new Promise(async (resolve) => {
     let candleRepo = conn.getRepository(Candle);
     const bitmex = new BitmexAPI({
-      apiKeyID: "WxX-i47QkysTG_8Yw2984EWb",
-      apiKeySecret: "ee4YzptdaJK7hoQAolsl4EjkFt3JOhFcB2Kxi2zIff3VruM",
+      apiKeyID: "17ijQekDaYpt1aW2pdyCFGoY",
+      apiKeySecret: "tDaXCPqZPYdYhR_85KQOQuJT4iHzvvRMj5aP7wXdE-nb_AUP",
     });
     console.log(count, "THIS COUNT");
     bitmex.Trade.getBucketed({

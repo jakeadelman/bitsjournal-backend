@@ -4,10 +4,10 @@ if (process.env.NODE_ENV === "production") {
     name: "default",
     type: "postgres",
     host: "db-postgresql-tor1-31102-do-user-3307088-0.a.db.ondigitalocean.com",
-    port: 25060,
+    port: 25061,
     username: "doadmin",
     password: "n4g3a8kcay2rmu8c",
-    database: "defaultdb",
+    database: "newpool",
     extra: { ssl: true },
     ssl: {
       rejectUnauthorized: false,
