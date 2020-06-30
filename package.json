@@ -41,7 +41,7 @@
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "google-trends-api": "^4.9.0",
-    "graphql": "^14.1.1",
+    "graphql": "^14.3.1",
     "instagram-id-to-url-segment": "^0.0.0",
     "instagram-private-api": "^0.6.8",
     "ioredis": "^4.5.1",
@@ -74,5 +74,8 @@
     "ts-node": "^8.10.1",
     "ts-node-dev": "^1.0.0-pre.32",
     "typescript": "^3.2.4"
+  },
+  "resolutions": {
+    "graphql": "^14.3.1"
   }
 }

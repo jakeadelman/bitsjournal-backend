@@ -6,10 +6,11 @@ export const createConn = (name: string): Promise<Connection> => {
       const connection: Connection = await createConnection({
         name: name,
         type: "postgres",
-        host: "bitsjournal-db-do-user-3307088-0.a.db.ondigitalocean.com",
+        host:
+          "db-postgresql-tor1-31102-do-user-3307088-0.a.db.ondigitalocean.com",
         port: 25061,
         username: "doadmin",
-        password: "xndvas26gehlgnn2",
+        password: "n4g3a8kcay2rmu8c",
         database: "newpool",
         ssl: { rejectUnauthorized: false },
         logging: false,
@@ -51,10 +52,11 @@ export const createConns = (name: string): Promise<Connection[]> => {
         {
           name: `${name}1`,
           type: "postgres",
-          host: "bitsjournal-db-do-user-3307088-0.a.db.ondigitalocean.com",
+          host:
+            "db-postgresql-tor1-31102-do-user-3307088-0.a.db.ondigitalocean.com",
           port: 25061,
           username: "doadmin",
-          password: "xndvas26gehlgnn2",
+          password: "n4g3a8kcay2rmu8c",
           database: "newpool",
           ssl: { rejectUnauthorized: false },
           logging: false,
@@ -67,10 +69,11 @@ export const createConns = (name: string): Promise<Connection[]> => {
         {
           name: `${name}2`,
           type: "postgres",
-          host: "bitsjournal-db-do-user-3307088-0.a.db.ondigitalocean.com",
+          host:
+            "db-postgresql-tor1-31102-do-user-3307088-0.a.db.ondigitalocean.com",
           port: 25061,
           username: "doadmin",
-          password: "xndvas26gehlgnn2",
+          password: "n4g3a8kcay2rmu8c",
           database: "newpool",
           ssl: { rejectUnauthorized: false },
           logging: false,

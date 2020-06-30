@@ -3,11 +3,12 @@ import {
   PrimaryGeneratedColumn,
   Column,
   BaseEntity,
-  OneToMany
+  OneToMany,
 } from "typeorm";
 import { Trade } from "./Trade";
 import { ObjectType, Field, ID, Root } from "type-graphql";
 import { IsEmailAlreadyExist } from "../modules/user/register/isEmailAlreadyExist";
+
 @ObjectType()
 @Entity("users")
 export class User extends BaseEntity {
@@ -46,9 +47,6 @@ export class User extends BaseEntity {
   @Column({ default: "none" })
   apiKeySecret: string;
 
-  @OneToMany(
-    () => Trade,
-    trade => trade.user
-  )
+  @OneToMany(() => Trade, (trade) => trade.user)
   trades: Trade[];
 }
