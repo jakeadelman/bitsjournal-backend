@@ -3,10 +3,10 @@ if (process.env.NODE_ENV === "production") {
   module.exports = {
     name: "default",
     type: "postgres",
-    host: "bitsjournal-db-do-user-3307088-0.a.db.ondigitalocean.com",
+    host: "db-postgresql-tor1-31102-do-user-3307088-0.a.db.ondigitalocean.com",
     port: 25060,
     username: "doadmin",
-    password: "xndvas26gehlgnn2",
+    password: "n4g3a8kcay2rmu8c",
     database: "defaultdb",
     extra: { ssl: true },
     ssl: {

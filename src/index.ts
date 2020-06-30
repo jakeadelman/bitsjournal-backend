@@ -64,16 +64,16 @@ const main = async () => {
 
   app.listen({ port: process.env.PORT || 4000 }, () => {
     console.log(`server started on http://localhost:4000/graphql`);
-    try {
-      require("@dynatrace/oneagent")({
-        environmentid: "uma42277",
-        apitoken: "kvq4X7AyTbyXoQy0ESAPT",
-        // endpoint: "<endpoint url>", // specify endpoint url - not needed for SaaS customers
-      });
-      console.log("SUCCESS loading oneagent");
-    } catch (err) {
-      console.log("Failed to load OneAgent: " + err);
-    }
+    // try {
+    //   require("@dynatrace/oneagent")({
+    //     environmentid: "uma42277",
+    //     apitoken: "kvq4X7AyTbyXoQy0ESAPT",
+    //     // endpoint: "<endpoint url>", // specify endpoint url - not needed for SaaS customers
+    //   });
+    //   console.log("SUCCESS loading oneagent");
+    // } catch (err) {
+    //   console.log("Failed to load OneAgent: " + err);
+    // }
   });
 };
 

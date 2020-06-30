@@ -10,8 +10,8 @@
     "dev": "ts-node-dev --respawn ./src/index.ts",
     "postinstall": "npx tsc",
     "test": "ts-node-dev src/sentiment_modules/bitmex/test.ts",
-    "populate-execution": "ts-node-dev src/sentiment_modules/bitmex/populateExecution.ts",
-    "populate-trades": "ts-node-dev src/sentiment_modules/bitmex/trades/populateTrades.ts",
+    "populate-execution": "ts-node-dev src/bitmex/execution/populateExecution.ts",
+    "populate-trades": "ts-node-dev src/bitmex/trades/populateTrades.ts",
     "fetch-execution": "ts-node-dev src/sentiment_modules/bitmex/fetchExecution.ts",
     "fetch-trades": "ts-node-dev src/sentiment_modules/bitmex/trades/fetchTrades.ts"
   },
